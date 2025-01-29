@@ -5,11 +5,11 @@ services:
       - 81:80
     volumes:
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./docker:/var/www/html
+      - .:/var/www/html
   php-fpm:
     build: ./docker
     volumes:
-      - ./docker:/var/www/html
+      - .:/var/www/html
 
   postgres:
 
