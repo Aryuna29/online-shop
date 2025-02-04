@@ -49,10 +49,10 @@ if (empty($errors)) {
             $_SESSION['user_id'] = $user;
             //setcookie('user_id', $user['id']);
             header("Location: /catalog.php");
-            require_once './login_form.php';
         } else {
             $errors['username'] = 'логин или пароль указаны неверно';
         }
     }
 
 }
+require_once './login_form.php';
