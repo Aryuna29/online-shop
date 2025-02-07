@@ -30,9 +30,9 @@ if (empty($errors)) {
         $passwordDB = $user['password'];
         if (password_verify($password, $passwordDB)) {
             session_start();
-            $_SESSION['user_id'] = $user;
+            $_SESSION['userId'] = $user['id'];
             //setcookie('user_id', $user['id']);
-            header("Location: /catalog.php");
+            header("Location: http://localhost:81/catalog");
         } else {
             $errors['username'] = 'логин или пароль указаны неверно';
         }
