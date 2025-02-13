@@ -1,6 +1,8 @@
 <section class="cards">
 <div class="card-profile"><a href="http://localhost:81/profile" type="button">Мой профиль</a></div>
-<div class="card-cart"><a href="http://localhost:81/profile" type="button">Корзина</a></div>
+<div class="card-cart"><a href="http://localhost:81/cart" type="button">Корзина</a></div>
+
+    <div class="card-exit"><a href="http://localhost:81/login" type="button">Выход</a></div>
 <h3>Каталог</h3>
 
     <div class="container container-cards">
@@ -17,9 +19,22 @@
                             </div>
                             <div class="card-title"> <?php echo $product['name']; ?> </div>
                                 <div class="card-desc"> <?php echo $product['description']; ?> </div>
-                            <button class="card-btn">В корзину</button>
                         </div>
                 </div>
+                    <form action="catalog" method="POST">
+                        <div class="container">
+                            <input type="hidden" placeholder="Enter Product-id" name="product_id" value="<?php echo $product['id'];?>" id="product_id" required>
+
+                            <label for="amount"><b>Amount</b></label>
+                            <?php if (isset($errors['amount'])): ?>
+                                <label style="color: brown"> <?php echo $errors['amount'];?> </label>
+                            <?php endif; ?>
+                            <input type="text" placeholder="Enter Amount" name="amount" id="amount" required>
+                            <hr>
+                            <button type="submit" name="submit">Добавить в корзину</button>
+                        </div>
+
+                    </form>
                 <?php endforeach;?>
             </div>
     </div>

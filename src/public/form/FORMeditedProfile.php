@@ -20,14 +20,14 @@
                     <label style="color: brown"> <?php echo $errors['name'];?> </label>
                 <?php endif; ?>
                 <label for="name">Name:</label>
-                <input name="name" value="<?php echo $user['name'] ?>">
+                <input name="name" value="<?php echo $user['name'];?>">
             </div>
             <div class="card-e">
                 <?php if (isset($errors['email'])): ?>
                     <label style="color: brown"> <?php echo $errors['email'];?> </label>
                 <?php endif; ?>
                 <label for="email">Email:</label>
-                <input name="email" value="<?php echo $user['email']?>">
+                <input name="email" value="<?php echo $user['email'];?>">
             </div>
             <div class="card-btn">
                 <button type="submit" name="submit">Изменить данные</button>

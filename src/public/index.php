@@ -4,34 +4,55 @@ $requesUri = $_SERVER['REQUEST_URI'];
 $requestMethod  = $_SERVER['REQUEST_METHOD'];
 
 if ($requesUri === '/profile') {
+    require_once './classes/user.php';
+    $user = new User();
     if ($requestMethod === 'GET') {
-        require_once './profile.php';
+        $user->profile();
     } elseif ($requestMethod === 'POST') {
-        require_once './profile.php';
+        $user->profile();
     }
 }elseif ($requesUri === '/editedProfile') {
+    require_once './classes/user.php';
+    $user = new User();
         if ($requestMethod === 'GET') {
-            require_once './FORMeditedProfile.php';
+            $user->profileEdited();
         } elseif ($requestMethod === 'POST') {
-            require_once './profileEDITED.php';
+            $user->profileEdited();
         }
 } elseif ($requesUri === '/registration') {
+    require_once './classes/user.php';
+    $user = new User();
     if ($requestMethod === 'GET') {
-        require_once './registration_form.php';
+       $user->getRegistrate();
     } elseif ($requestMethod === 'POST') {
-        require_once './registration.php';
+       $user->registrate();
     }
 
 }elseif ($requesUri === '/login') {
+    require_once './classes/user.php';
+    $user = new user();
     if ($requestMethod === 'GET') {
-        require_once './login_form.php';
+        $user->getLogin();
     } elseif ($requestMethod === 'POST') {
-        header( 'location: http://localhost:81/catalog');
+       $user->login();
     }
 } elseif ($requesUri === '/catalog') {
+    require_once './classes/products.php';
+    $products = new products();
     if ($requestMethod === 'GET') {
-        require_once './catalog.php';
+        $products->catalog();
     } elseif ($requestMethod === 'POST') {
-        require_once './catalog.php';
+        $products->catalog();
     }
+} elseif ($requesUri === '/cart') {
+    require_once './classes/products.php';
+    $products = new products();
+    if ($requestMethod === 'GET') {
+        $products->cart();
+    } elseif ($requestMethod === 'POST') {
+        $products->cart();
+    }
+} else {
+    http_response_code(404);
+require_once './404.php';
 }
