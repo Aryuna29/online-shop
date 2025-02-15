@@ -10,6 +10,9 @@
         <?php endif; ?>
         <input type="password" name="p" placeholder="Password" required="required" />
         <button type="submit" class="btn btn-primary btn-block btn-large">Let me in.</button>
+        <div class="registr">
+            <p>You don't have an account? <a href="http://localhost:81/registration">Sign in</a>.</p>
+        </div>
     </form>
 </div>
 

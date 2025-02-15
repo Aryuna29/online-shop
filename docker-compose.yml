@@ -10,6 +10,7 @@ services:
     build: ./docker
     volumes:
       - .:/var/www/html
+      - ./docker/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-xdebug.ini
 
   postgres:
 
