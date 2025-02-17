@@ -1,89 +1,95 @@
 <?php
 class App
 {
-
     private array $routes = [
         '/registration' => [
             'GET' => [
-                'class' => 'userController',
+                'class' => 'UserController',
                 'method' => 'getRegistrate',
             ],
             'POST' => [
-                'class' => 'userController',
+                'class' => 'UserController',
                 'method' => 'registrate',
             ]
         ],
         '/login' => [
             'GET' => [
-                'class' => 'userController',
+                'class' => 'UserController',
                 'method' => 'getLogin',
             ],
             'POST' => [
-                'class' => 'userController',
+                'class' => 'UserController',
                 'method' => 'login',
             ]
         ],
         '/profile' => [
             'GET' => [
-                'class' => 'userController',
+                'class' => 'UserController',
                 'method' => 'profile',
             ],
             'POST' => [
-                'class' => 'userController',
+                'class' => 'UserController',
                 'method' => 'profile',
             ]
         ],
         '/editedProfile' => [
             'GET' => [
-                'class' => 'userController',
+                'class' => 'UserController',
                 'method' => 'profileEdited',
             ],
             'POST' => [
-                'class' => 'userController',
+                'class' => 'UserController',
                 'method' => 'profileEdited',
             ]
         ],
         '/catalog' => [
             'GET' => [
-                'class' => 'productController',
+                'class' => 'ProductController',
                 'method' => 'catalog',
             ],
             'POST' => [
-                'class' => 'productController',
-                'method' => 'catalog',
-            ]
+                'class' => 'ProductController',
+'method' => 'catalog',]
         ],
         '/cart' => [
             'GET' => [
-                'class' => 'productController',
-                'method' => 'cart',
-            ],
-            'POST' => [
-                'class' => 'productController',
+                'class' => 'ProductController',
                 'method' => 'cart',
             ]
+        ],
+        '/logout' => [
+            'GET' => [
+                'class' => 'UserController',
+                'method' => 'logout',
+            ]
         ]
-
     ];
 public function run()
 {
 
-    $requesUri = $_SERVER['REQUEST_URI'];
+    $requestUri = $_SERVER['REQUEST_URI'];
     $requestMethod  = $_SERVER['REQUEST_METHOD'];
 
-    $routeMethods = $this->routes[$requesUri];
-    $handler = $routeMethods[$requestMethod];
-    $class = $handler['class'];
-    $method = $handler['method'];
-    $controller = new $class();
-    $controller->$method();
-    //else {
-    //    http_response_code(404);
-     //   require_once '../public/404.php';
+    if (isset($this->routes[$requestUri])) {
+        $routeMethods = $this->routes[$requestUri];
+        if (isset($routeMethods[$requestMethod])) {
+            $handler = $routeMethods[$requestMethod];
+
+            $class = $handler['class'];
+            $method = $handler['method'];
+
+            require_once "../Controllers/{$class}.php";
+
+            $controller = new $class();
+            $controller->$method();
+        } else {
+            echo "$requestMethod не поддерживается для $requestUri";
+        }
+    } else {
+        http_response_code(404);
+        require_once '../Views/404.php';
     }
 
-//require_once '../Core/App.php';
-//$app = new App();
-//$app->run();
+    }
 
 }

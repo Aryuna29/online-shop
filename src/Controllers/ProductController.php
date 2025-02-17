@@ -1,6 +1,6 @@
 <?php
 
-class productController
+class ProductController
 {
     public function getCatalog()
     {
@@ -79,6 +79,15 @@ class productController
         $pdo = new PDO("pgsql:host=postgres; port=5432; dbname=mydb", 'user', 'pass');
         $stmt = $pdo->query("SELECT * FROM user_products WHERE user_id = {$user_id}");
         $data = $stmt->fetchALL();
+
+        $products =[];
+        foreach ($data as $data) {
+            $productId = $data['product_id'];
+            $stmt = $pdo->query("SELECT * FROM products WHERE id = {$productId}");
+            $product = $stmt->fetch();
+            $product['amount'] = $data['amount'];
+            $products[] = $product;
+        }
 
 
         require_once '../Views/cart_form.php';

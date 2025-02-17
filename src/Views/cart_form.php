@@ -2,19 +2,29 @@
     <div class="container">
         <div class="card-profile"><a href="http://localhost:81/profile" type="button">Мой профиль</a></div>
         <div class="card-cart"><a href="http://localhost:81/catalog" type="button">Каталог</a></div>
-        <h1>Cart</h1>
+        <h1>Корзина</h1>
         <hr>
 
-        <?php foreach ($data as $data): ?>
+        <?php foreach ($products as $product): ?>
         <div class="card-name">
-            <label for="product_id">Product id: <?php echo $data['product_id'] ?></label>
+            <img src="<?php echo $product['image_url']?>" height="350" width="280" alt="Card image"/>
         </div>
+            <div class="card-name">
+                <label for="product_id"><?php echo $product['name'] ?></label>
+            </div>
+            <div class="card-name">
+                <label for="product_id"> <?php echo $product['description'] ?></label>
+            </div>
+            <div class="card-name">
+                <label for="product_id"> <?php echo $product['price'] ?></label>
+            </div>
+
         <div class="card-e">
-            <label for="amount">Amount: <?php echo $data['amount']?></label>
+            <label for="amount">Количество: <?php echo $product['amount']?></label>
         </div>
         <?php endforeach;?>
         <div class="card-btn">
-            <a href="http://localhost:81/catalog" ng-click="setTab(2)">Add product</a>
+            <a href="http://localhost:81/catalog" ng-click="setTab(2)">Добавить товар</a>
         </div>
     </div>
         <hr>

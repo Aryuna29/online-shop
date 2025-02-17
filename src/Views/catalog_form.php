@@ -2,7 +2,7 @@
 <div class="card-profile"><a href="http://localhost:81/profile" type="button">Мой профиль</a></div>
 <div class="card-cart"><a href="http://localhost:81/cart" type="button">Корзина</a></div>
 
-    <div class="card-exit"><a href="http://localhost:81/login" type="button">Выход</a></div>
+    <div class="card-exit"><a href="/logout" type="button">Выход</a></div>
 <h3>Каталог</h3>
 
     <div class="container container-cards">

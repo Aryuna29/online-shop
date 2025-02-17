@@ -1,10 +1,12 @@
 <?php
 
-class userController
+class UserController
 {
     public function getRegistrate()
     {
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         if (isset($_SESSION['userId'])) {
             header('location: /catalog');
         }
@@ -103,7 +105,9 @@ class userController
             } else {
                 $passwordDB = $user['password'];
                 if (password_verify($password, $passwordDB)) {
-                    session_start();
+                    if (session_status() !== PHP_SESSION_ACTIVE) {
+                        session_start();
+                    }
                     $_SESSION['userId'] = $user['id'];
                     header("Location: http://localhost:81/catalog");
                 } else {
@@ -134,7 +138,9 @@ class userController
 
     public function profile()
     {
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         if (isset($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
             require_once '../Model/User.php';
@@ -155,7 +161,9 @@ class userController
     public function profileEdited()
     {
 
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         if (isset($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
             $pdo = new PDO("pgsql:host=postgres; port=5432; dbname=mydb", 'user', 'pass');
@@ -213,6 +221,18 @@ class userController
         }
 
         return $errors;
+    }
+
+    public function logout()
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+        unset($_SESSION['userId']);
+        session_destroy();
+        header("Location: /login");
+        require_once '../Views/logout.php';
+    exit();
     }
 
 
