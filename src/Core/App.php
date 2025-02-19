@@ -1,4 +1,6 @@
 <?php
+
+namespace Core;
 class App
 {
     private array $routes = [
@@ -55,12 +57,26 @@ class App
             'GET' => [
                 'class' => 'ProductController',
                 'method' => 'cart',
+            ],
+            'POST' => [
+                'class' => 'ProductController',
+                'method' => 'cart',
             ]
         ],
         '/logout' => [
             'GET' => [
                 'class' => 'UserController',
                 'method' => 'logout',
+            ]
+        ],
+        '/order' => [
+            'GET' => [
+                'class' => 'OrderController',
+                'method' => 'order',
+            ],
+            'POST' => [
+                'class' => 'OrderController',
+                'method' => 'order',
             ]
         ]
     ];
@@ -75,12 +91,12 @@ public function run()
         if (isset($routeMethods[$requestMethod])) {
             $handler = $routeMethods[$requestMethod];
 
-            $class = $handler['class'];
+           $class = $handler['class'];
             $method = $handler['method'];
 
-            require_once "../Controllers/{$class}.php";
+          //  require_once "../Controllers/{$class}.php";
 
-            $controller = new $class();
+            $controller = new \Controllers\ProductController();
             $controller->$method();
         } else {
             echo "$requestMethod не поддерживается для $requestUri";

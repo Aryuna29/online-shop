@@ -1,5 +1,6 @@
 <?php
 
+namespace Controllers;
 class ProductController
 {
     public function getCatalog()
@@ -16,10 +17,10 @@ class ProductController
             header('Location:http://localhost:81/login');
             exit();
         }
-        $pdo = new PDO("pgsql:host=postgres; port=5432; dbname=mydb", 'user', 'pass');
 
-        $stmt = $pdo->query('SELECT * FROM products');
-        $products = $stmt->fetchAll();
+//        require_once '../Model/Product.php';
+        $productModel = new \Model\Product();
+        $products = $productModel->getProduct();
 
         if (isset($_POST['submit'])) {
             $errors = $this->validateCatalog($_POST);
@@ -27,18 +28,16 @@ class ProductController
                 $amountNew = $_POST['amount'];
                 $product_id = $_POST['product_id'];
                 $user_id = $_SESSION['userId'];
-                $pdo = new PDO("pgsql:host=postgres; port=5432; dbname=mydb", 'user', 'pass');
-
-                $stmt = $pdo->prepare("SELECT * FROM user_products WHERE product_id = :product_id AND user_id = :user_id");
-                $stmt->execute(['product_id' => $product_id, 'user_id' => $user_id]);
-                $ident = $stmt->fetch();
+//                require_once '../Model/UserProduct.php';
+                $userProductModel = new \Model\UserProduct();
+                $ident = $userProductModel->getById($product_id, $user_id);
                 if ($ident !== false) {
                     $amount = $amountNew + $ident['amount'];
-                    $stmt = $pdo->prepare("UPDATE user_products SET amount = :amount WHERE product_id = :product_id AND user_id = :user_id");
-                    $stmt->execute(['amount' => $amount, 'product_id' => $product_id, 'user_id' => $user_id]);
+
+                    $userProductModel->updateById($product_id, $user_id ,$amount);
                 } else {
-                    $stmt = $pdo->prepare("INSERT INTO user_products (user_id, product_id, amount) VALUES (:user_id, :product_id, :amount)");
-                    $stmt->execute(['user_id' => $user_id, 'product_id' => $product_id, 'amount' => $amountNew]);
+
+                    $userProductModel->insertId($user_id, $product_id, $amountNew);
                 }
                 header('Location: http://localhost:81/cart');
             }
@@ -76,17 +75,27 @@ class ProductController
             exit();
         }
         $user_id = $_SESSION['userId'];
-        $pdo = new PDO("pgsql:host=postgres; port=5432; dbname=mydb", 'user', 'pass');
-        $stmt = $pdo->query("SELECT * FROM user_products WHERE user_id = {$user_id}");
-        $data = $stmt->fetchALL();
+
+//        require_once '../Model/UserProduct.php';
+        $userProductModel = new \Model\UserProduct();
+        $data = $userProductModel->getByUserId($user_id);
 
         $products =[];
         foreach ($data as $data) {
             $productId = $data['product_id'];
-            $stmt = $pdo->query("SELECT * FROM products WHERE id = {$productId}");
-            $product = $stmt->fetch();
+
+//            require_once '../Model/Product.php';
+            $productModel = new \Model\Product();
+            $product = $productModel->getById($productId);
+
             $product['amount'] = $data['amount'];
             $products[] = $product;
+
+            if (isset($_POST['submit'])) {
+                $user_id = $_SESSION['userId'];
+                    $userProductModel->deleteById($productId, $user_id);
+                    header('Location: http://localhost:81/catalog');
+            }
         }
 
 

@@ -1,5 +1,6 @@
 <?php
 
+namespace Controllers;
 class UserController
 {
     public function getRegistrate()
@@ -24,8 +25,8 @@ class UserController
             $passwordRep = $_POST['psw-repeat'];
             $password = password_hash($password, PASSWORD_DEFAULT);
 
-            require_once '../Model/User.php';
-            $userModel = new User();
+//            require_once '../Model/User.php';
+            $userModel = new \Model\User();
             $insertData = $userModel->insertByNameEmailPass($name, $email, $password);
             $result = $userModel->getByEmail($email);
             header("Location: http://localhost:81/catalog");
@@ -56,8 +57,8 @@ class UserController
             } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
                 $errors['email'] = 'email некорректный';
             } else {
-                require_once '../Model/User.php';
-                $userModel = new User();
+//                require_once '../Model/User.php';
+                $userModel = new \Model\User();
                 $result = $userModel->getByEmail($email);
                 if ($result > 0) {
                     $errors['email'] = 'email уже существует';
@@ -96,8 +97,8 @@ class UserController
         if (empty($errors)) {
             $email = $_POST['u'];
             $password = $_POST['p'];
-            require_once '../Model/User.php';
-            $userModel = new User();
+//            require_once '../Model/User.php';
+            $userModel = new \Model\User();
             $user = $userModel->getByEmail($email);
 
             if ($user === false) {
@@ -143,8 +144,8 @@ class UserController
         }
         if (isset($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
-            require_once '../Model/User.php';
-            $userModel = new User();
+//            require_once '../Model/User.php';
+            $userModel = new \Model\User();
             $user = $userModel->getById($userId);
             require_once '../Views/profile_form.php';
         } else {
@@ -166,9 +167,8 @@ class UserController
         }
         if (isset($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
-            $pdo = new PDO("pgsql:host=postgres; port=5432; dbname=mydb", 'user', 'pass');
-            require_once '../Model/User.php';
-            $userModel = new User();
+//            require_once '../Model/User.php';
+            $userModel = new \Model\User();
             $user = $userModel->getById($userId);
 
             if (isset($_POST['submit'])) {
@@ -209,8 +209,8 @@ class UserController
         } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             $errors['email'] = 'email некорректный';
         } else {
-            require_once '../Model/User.php';
-            $userModel = new User();
+//            require_once '../Model/User.php';
+            $userModel = new \Model\User();
             $user = $userModel->getByEmail($email);
             $userId = $_SESSION['userId'];
             if (!empty($user)) {
@@ -228,11 +228,11 @@ class UserController
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
-        unset($_SESSION['userId']);
-        session_destroy();
-        header("Location: /login");
-        require_once '../Views/logout.php';
-    exit();
+            session_unset();
+            session_destroy();
+            header("Location: /login");
+            require_once '../Views/logout.php';
+            exit();
     }
 
 

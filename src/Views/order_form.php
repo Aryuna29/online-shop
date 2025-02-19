@@ -1,36 +1,39 @@
-<form action="cart" method="post">
+
+<div class="card-cart"><a href="http://localhost:81/cart" type="button">Корзина</a></div>
+<form action="order" method="POST">
     <div class="container">
-        <div class="card-profile"><a href="http://localhost:81/profile" type="button">Мой профиль</a></div>
-        <div class="card-cart"><a href="http://localhost:81/catalog" type="button">Каталог</a></div>
-        <h1>Корзина</h1>
+        <h1>Order</h1>
         <hr>
 
+        <label for="address"><b>Address</b></label>
+        <?php if (isset($errors['address'])): ?>
+            <label style="color: brown"> <?php echo $errors['address'];?> </label>
+        <?php endif; ?>
+        <input type="text" placeholder="Enter address" name="address" id="address" required>
+
+        <label for="phone"><b>phone</b></label>
+        <?php if (isset($errors['phone'])): ?>
+            <label style="color: brown"> <?php echo $errors['phone'];?> </label>
+        <?php endif; ?>
+        <input type="text" placeholder="Enter phone" name="phone" id="phone" required>
         <?php foreach ($products as $product): ?>
-        <div class="card-name">
-            <img src="<?php echo $product['image_url']?>" height="350" width="280" alt="Card image"/>
-        </div>
             <div class="card-name">
                 <label for="product_id"><?php echo $product['name'] ?></label>
             </div>
-            <div class="card-name">
-                <label for="product_id"> <?php echo $product['description'] ?></label>
-            </div>
+
             <div class="card-name">
                 <label for="product_id"> <?php echo $product['price'] ?></label>
             </div>
 
-        <div class="card-e">
-            <label for="amount">Количество: <?php echo $product['amount']?></label>
-        </div>
-
+            <div class="card-e">
+                <label for="amount">Количество: <?php echo $product['amount']?></label>
+            </div>
         <?php endforeach;?>
-        <button type="submit" name="submit" >Удалить</button>
-        <div class="card-btn">
-            <a href="http://localhost:81/catalog" ng-click="setTab(2)">Добавить товар</a>
-        </div>
-        <div class="card-cart"><a href="http://localhost:81/order" type="button">заказать</a></div>
-    </div>
+
         <hr>
+
+        <button type="submit" name="submit">Оформить заказ</button>
+    </div>
 
 </form>
 
@@ -90,4 +93,3 @@
         text-align: center;
     }
     <style>
-
