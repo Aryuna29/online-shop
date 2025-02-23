@@ -6,76 +6,76 @@ class App
     private array $routes = [
         '/registration' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => '\Controllers\UserController',
                 'method' => 'getRegistrate',
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => '\Controllers\UserController',
                 'method' => 'registrate',
             ]
         ],
         '/login' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => '\Controllers\UserController',
                 'method' => 'getLogin',
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => '\Controllers\UserController',
                 'method' => 'login',
             ]
         ],
         '/profile' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => '\Controllers\UserController',
                 'method' => 'profile',
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => '\Controllers\UserController',
                 'method' => 'profile',
             ]
         ],
         '/editedProfile' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => '\Controllers\UserController',
                 'method' => 'profileEdited',
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => '\Controllers\UserController',
                 'method' => 'profileEdited',
             ]
         ],
         '/catalog' => [
             'GET' => [
-                'class' => 'ProductController',
+                'class' => '\Controllers\ProductController',
                 'method' => 'catalog',
             ],
             'POST' => [
-                'class' => 'ProductController',
+                'class' => '\Controllers\ProductController',
 'method' => 'catalog',]
         ],
         '/cart' => [
             'GET' => [
-                'class' => 'ProductController',
+                'class' => '\Controllers\ProductController',
                 'method' => 'cart',
             ],
             'POST' => [
-                'class' => 'ProductController',
+                'class' => '\Controllers\ProductController',
                 'method' => 'cart',
             ]
         ],
         '/logout' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => '\Controllers\UserController',
                 'method' => 'logout',
             ]
         ],
         '/order' => [
             'GET' => [
-                'class' => 'OrderController',
+                'class' => '\Controllers\OrderController',
                 'method' => 'order',
             ],
             'POST' => [
-                'class' => 'OrderController',
+                'class' => '\Controllers\OrderController',
                 'method' => 'order',
             ]
         ]
@@ -94,9 +94,7 @@ public function run()
            $class = $handler['class'];
             $method = $handler['method'];
 
-          //  require_once "../Controllers/{$class}.php";
-
-            $controller = new \Controllers\ProductController();
+            $controller = new $class;
             $controller->$method();
         } else {
             echo "$requestMethod не поддерживается для $requestUri";

@@ -49,12 +49,12 @@ class OrderController
                     $orderModel->insert($userId, $address, $phone);
 
                     $orderId = $orderModel->getIdByUserId($userId);
-//                    foreach () {
+//
                         $amount= $product['amount'];
 //                        require_once '../Model/OrderProduct.php';
                         $orderProductModel = new \Model\OrderProduct();
                         $orderProductModel->insertData($orderId, $productId, $amount);
-//                    }
+
                 }
             }
 

@@ -9,8 +9,8 @@ $autoload = function (string $className) {
     return false;
 };
 
-
 spl_autoload_register($autoload);
+
 
 $app = new \Core\App();
 $app->run();
