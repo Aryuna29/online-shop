@@ -1,13 +1,21 @@
 <?php
 
 namespace Controllers;
+
+use Model\UserProduct;
+use Model\Product;
+
+
 class ProductController
 {
-    public function getCatalog()
-    {
-        require_once '../Views/catalog_form.php';
-    }
 
+    private UserProduct $userProductModel;
+    private Product $productModel;
+    public function __construct()
+    {
+        $this->userProductModel = new UserProduct();
+        $this->productModel = new Product();
+    }
     public function catalog()
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -18,9 +26,8 @@ class ProductController
             exit();
         }
 
-//        require_once '../Model/Product.php';
-        $productModel = new \Model\Product();
-        $products = $productModel->getProduct();
+        $products = $this->productModel->getProduct();
+
 
         if (isset($_POST['submit'])) {
             $errors = $this->validateCatalog($_POST);
@@ -28,18 +35,16 @@ class ProductController
                 $amountNew = $_POST['amount'];
                 $product_id = $_POST['product_id'];
                 $user_id = $_SESSION['userId'];
-//                require_once '../Model/UserProduct.php';
-                $userProductModel = new \Model\UserProduct();
-                $ident = $userProductModel->getById($product_id, $user_id);
-                if ($ident !== false) {
-                    $amount = $amountNew + $ident['amount'];
 
-                    $userProductModel->updateById($product_id, $user_id ,$amount);
+                $ident = $this->userProductModel->getById($product_id, $user_id);
+                if ($ident !== null) {
+                    $amount = $amountNew + $ident->getAmount();
+
+                    $this->userProductModel->updateById($product_id, $user_id ,$amount);
                 } else {
 
-                    $userProductModel->insertId($user_id, $product_id, $amountNew);
+                    $this->userProductModel->insertId($user_id, $product_id, $amountNew);
                 }
-                header('Location: http://localhost:81/cart');
             }
         }
         require_once '../Views/catalog_form.php';
@@ -60,11 +65,6 @@ class ProductController
         return $errors;
     }
 
-    public function getCart()
-    {
-        require_once '../Views/cart_form.php';
-    }
-
     public function cart()
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -76,28 +76,20 @@ class ProductController
         }
         $user_id = $_SESSION['userId'];
 
-//        require_once '../Model/UserProduct.php';
-        $userProductModel = new \Model\UserProduct();
-        $data = $userProductModel->getByUserId($user_id);
+        $userProducts = $this->userProductModel->getALLByUserId($user_id);
 
         $products =[];
-        foreach ($data as $data) {
-            $productId = $data['product_id'];
-
-//            require_once '../Model/Product.php';
-            $productModel = new \Model\Product();
-            $product = $productModel->getById($productId);
-
-            $product['amount'] = $data['amount'];
-            $products[] = $product;
+        foreach ($userProducts as $userProduct) {
+            $product = $this->productModel->getById($userProduct->getProductId());
+            $userProduct[] = $product;
+            $products[] = $userProduct;
 
             if (isset($_POST['submit'])) {
                 $user_id = $_SESSION['userId'];
-                    $userProductModel->deleteById($productId, $user_id);
+                    $this->userProductModel->deleteById($userProduct->getProductId(), $user_id);
                     header('Location: http://localhost:81/catalog');
             }
         }
-
 
         require_once '../Views/cart_form.php';
     }

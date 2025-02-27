@@ -7,7 +7,7 @@
             </li>
         </div>
         <div class="card-info">
-            <h1>Профиль</h1>
+            <h3>Профиль</h3>
         </div>
         <div class="card-obs">
             <div class="card-top">
@@ -20,14 +20,14 @@
                     <label style="color: brown"> <?php echo $errors['name'];?> </label>
                 <?php endif; ?>
                 <label for="name">Name:</label>
-                <input name="name" value="<?php echo $user['name'];?>">
+                <input name="name" value="<?php echo $user->getName();?>">
             </div>
             <div class="card-e">
                 <?php if (isset($errors['email'])): ?>
                     <label style="color: brown"> <?php echo $errors['email'];?> </label>
                 <?php endif; ?>
                 <label for="email">Email:</label>
-                <input name="email" value="<?php echo $user['email'];?>">
+                <input name="email" value="<?php echo $user->getEmail();?>">
             </div>
             <div class="card-btn">
                 <button type="submit" name="submit">Изменить данные</button>
@@ -39,6 +39,17 @@
 </div>
 
 <style>
+    h3 {
+        display: block;
+        margin-bottom: 60px;
+        margin-left: 60px;
+        font-weight: 1000;
+        font-size: 40px;
+        line-height: 1.2;
+        color: #333333;
+        text-align: justify-all;
+    }
+
     .card-obs {
         margin:auto;
         overflow: auto;

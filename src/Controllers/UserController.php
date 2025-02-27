@@ -1,8 +1,17 @@
 <?php
 
 namespace Controllers;
+
+use Model\User;
+
 class UserController
 {
+    private User $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new User();
+    }
     public function getRegistrate()
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -25,10 +34,8 @@ class UserController
             $passwordRep = $_POST['psw-repeat'];
             $password = password_hash($password, PASSWORD_DEFAULT);
 
-//            require_once '../Model/User.php';
-            $userModel = new \Model\User();
-            $insertData = $userModel->insertByNameEmailPass($name, $email, $password);
-            $result = $userModel->getByEmail($email);
+            $insertData = $this->userModel->insertByNameEmailPass($name, $email, $password);
+            $result = $this->userModel->getByEmail($email);
             header("Location: http://localhost:81/catalog");
         }
 
@@ -57,9 +64,7 @@ class UserController
             } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
                 $errors['email'] = 'email некорректный';
             } else {
-//                require_once '../Model/User.php';
-                $userModel = new \Model\User();
-                $result = $userModel->getByEmail($email);
+                $result = $this->userModel->getByEmail($email);
                 if ($result > 0) {
                     $errors['email'] = 'email уже существует';
                 }
@@ -97,19 +102,18 @@ class UserController
         if (empty($errors)) {
             $email = $_POST['u'];
             $password = $_POST['p'];
-//            require_once '../Model/User.php';
-            $userModel = new \Model\User();
-            $user = $userModel->getByEmail($email);
+
+            $user = $this->userModel->getByEmail($email);
 
             if ($user === false) {
                 $errors['username'] = 'логин или пароль указаны неверно';
             } else {
-                $passwordDB = $user['password'];
+                $passwordDB = $user->getPassword();
                 if (password_verify($password, $passwordDB)) {
                     if (session_status() !== PHP_SESSION_ACTIVE) {
                         session_start();
                     }
-                    $_SESSION['userId'] = $user['id'];
+                    $_SESSION['userId'] = $user->getId();
                     header("Location: http://localhost:81/catalog");
                 } else {
                     $errors['username'] = 'логин или пароль указаны неверно';
@@ -144,9 +148,8 @@ class UserController
         }
         if (isset($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
-//            require_once '../Model/User.php';
-            $userModel = new \Model\User();
-            $user = $userModel->getById($userId);
+
+            $user = $this->userModel->getById($userId);
             require_once '../Views/profile_form.php';
         } else {
             header('Location: http://localhost:81/login');
@@ -167,20 +170,19 @@ class UserController
         }
         if (isset($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
-//            require_once '../Model/User.php';
-            $userModel = new \Model\User();
-            $user = $userModel->getById($userId);
+
+            $user = $this->userModel->getById($userId);
 
             if (isset($_POST['submit'])) {
                 $errors = $this->validateProfile($_POST);
                 if (empty($errors)) {
                     $name = $_POST['name'];
                     $email = $_POST['email'];
-                    if ($user['name'] !== $name) {
-                        $userModel->updateNameById($userId, $name);
+                    if ($user->getName() !== $name) {
+                        $this->userModel->updateNameById($userId, $name);
                     }
-                    if ($user['email'] !== $email) {
-                       $userModel->updateEmailById($userId, $email);
+                    if ($user->getEmail() !== $email) {
+                        $this->userModel->updateEmailById($userId, $email);
                     }
                     header('Location: http://localhost:81/profile');
                     exit;
@@ -209,12 +211,11 @@ class UserController
         } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             $errors['email'] = 'email некорректный';
         } else {
-//            require_once '../Model/User.php';
-            $userModel = new \Model\User();
-            $user = $userModel->getByEmail($email);
+
+            $user = $this->userModel->getByEmail($email);
             $userId = $_SESSION['userId'];
             if (!empty($user)) {
-                if ($user['id'] !== $userId) {
+                if ($user->getId() !== $userId) {
                     $errors['email'] = 'email уже существует';
                 }
             }

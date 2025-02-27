@@ -1,12 +1,11 @@
 <div class="container">
     <form action="profile" method="post">
         <div class="card-link">
-            <li ng-class="{ active: isSet(2) }">
-                <a href="http://localhost:81/catalog" ng-click="setTab(2)">Каталог</a>
+                <a href="http://localhost:81/catalog" class="button16">Каталог</a>
             </li>
         </div>
         <div class="card-info">
-            <h1>Профиль</h1>
+            <h3>Профиль</h3>
         </div>
         <div class="card-obs">
             <div class="card-top">
@@ -15,10 +14,10 @@
                 </a>
             </div>
             <div class="card-name">
-                <label for="name">Name: <?php echo $user['name'] ?></label>
+                <label for="name">Name: <?php echo $user->getName();?></label>
             </div>
             <div class="card-e">
-                <label for="email">Email: <?php echo $user['email']?></label>
+                <label for="email">Email: <?php echo $user->getEmail();?></label>
             </div>
 
             <div class="card-btn">
@@ -30,6 +29,17 @@
 </div>
 
 <style>
+    h3 {
+        display: block;
+        margin-bottom: 60px;
+        margin-left: 60px;
+        font-weight: 1000;
+        font-size: 40px;
+        line-height: 1.2;
+        color: #333333;
+        text-align: justify-all;
+    }
+
     .card-obs {
         margin:auto;
         overflow: auto;
@@ -86,5 +96,24 @@
         border-color: #6C6C6C !important;
         border-radius: 25px;
     }
-
+    a.button16 {
+        display: inline-block;
+        text-decoration: none;
+        padding: 1em;
+        outline: none;
+        border-radius: 1px;
+    }
+    a.button16:hover {
+        background-image:
+                radial-gradient(1px 45% at 0% 50%, rgba(0,0,0,.6), transparent),
+                radial-gradient(1px 45% at 100% 50%, rgba(0,0,0,.6), transparent);
+    }
+    a.button16:active {
+        background-image:
+                radial-gradient(45% 45% at 50% 100%, rgba(255,255,255,.9), rgba(255,255,255,0)),
+                linear-gradient(rgba(255,255,255,.4), rgba(255,255,255,.3));
+        box-shadow:
+                inset rgba(162,95,42,.4) 0 0 0 1px,
+                inset rgba(255,255,255,.9) 0 0 1px 3px;
+    }
 </style>

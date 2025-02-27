@@ -1,37 +1,38 @@
 <form action="cart" method="post">
-    <div class="container">
-        <div class="card-profile"><a href="http://localhost:81/profile" type="button">Мой профиль</a></div>
-        <div class="card-cart"><a href="http://localhost:81/catalog" type="button">Каталог</a></div>
-        <h1>Корзина</h1>
+    <a class="container">
+        <a href="http://localhost:81/profile" class="button16">Мой профиль</a>
+        <a href="http://localhost:81/catalog" class="button16">Каталог</a>
+        <a href="http://localhost:81/OrderUsers" class="button16">Мои заказы</a>
+        <h3>Корзина</h3>
         <hr>
 
         <?php foreach ($products as $product): ?>
         <div class="card-name">
-            <img src="<?php echo $product['image_url']?>" height="350" width="280" alt="Card image"/>
+            <img src="<?php echo $product->getImageUrl();?>" height="350" width="280" alt="Card image"/>
         </div>
             <div class="card-name">
-                <label for="product_id"><?php echo $product['name'] ?></label>
+                <label for="product_id"><?php echo $product->getName();?></label>
             </div>
             <div class="card-name">
-                <label for="product_id"> <?php echo $product['description'] ?></label>
+                <label for="product_id"> <?php echo $product->getDescription();?></label>
             </div>
             <div class="card-name">
-                <label for="product_id"> <?php echo $product['price'] ?></label>
+                <label for="product_id"> <?php echo $product->getPrice();?></label>
             </div>
 
         <div class="card-e">
-            <label for="amount">Количество: <?php echo $product['amount']?></label>
+            <label for="amount">Количество: <?php echo $product->getAmount();?></label>
         </div>
 
         <?php endforeach;?>
-        <button type="submit" name="submit" >Удалить</button>
-        <div class="card-btn">
-            <a href="http://localhost:81/catalog" ng-click="setTab(2)">Добавить товар</a>
-        </div>
-        <div class="card-cart"><a href="http://localhost:81/order" type="button">заказать</a></div>
+        <form class="mt-4">
+            <button type="submit" name="submit" class="btn btn-outline-primary btn-lg btn-block">Удалить</button>
+        </form>
+
+        <a href="http://localhost:81/create-order" class="button21">заказать</a>
     </div>
         <hr>
-
+    </a>
 </form>
 
 <style>
@@ -62,32 +63,72 @@
         border: 1px solid #f1f1f1;
         margin-bottom: 25px;
     }
-
-    /* Set a style for the submit/register button */
-    .registerbtn {
-        background-color: #04AA6D;
-        color: white;
-        padding: 16px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-        opacity: 0.9;
+    h3 {
+        display: block;
+        margin-bottom: 60px;
+        margin-left: 60px;
+        font-weight: 1000;
+        font-size: 40px;
+        line-height: 1.2;
+        color: #333333;
+        text-align: justify-all;
     }
 
-    .registerbtn:hover {
-        opacity:1;
-    }
 
-    /* Add a blue text color to links */
-    a {
-        color: dodgerblue;
-    }
-
-    /* Set a grey background color and center the text of the "sign in" section */
-    .signin {
-        background-color: #f1f1f1;
+    a.button21 {
+        display: inline-block;
+        width: 5em;
+        height: 2em;
+        line-height: 2em;
+        vertical-align: middle;
         text-align: center;
+        text-decoration: none;
+        user-select: none;
+        color: rgb(0,0,0);
+        outline: none;
+        border: 1px solid rgba(0,0,0,.4);
+        border-top-color: rgba(0,0,0,.3);
+        border-radius: 2px;
+        background: linear-gradient(rgb(255,255,255), rgb(240,240,240));
+        box-shadow:
+                0 0 3px rgba(0,0,0,0) inset,
+                0 1px 1px 1px rgba(255,255,255,.2),
+                0 -1px 1px 1px rgba(0,0,0,0);
+        transition: .2s ease-in-out;
+    }
+    a.button21:hover:not(:active) {
+        box-shadow:
+                0 0 3px rgba(0,0,0,0) inset,
+                0 1px 1px 1px rgba(0,255,255,.5),
+                0 -1px 1px 1px rgba(0,255,255,.5);
+    }
+    a.button21:active {
+        background: linear-gradient(rgb(250,250,250), rgb(235,235,235));
+        box-shadow:
+                0 0 3px rgba(0,0,0,.5) inset,
+                0 1px 1px 1px rgba(255,255,255,.4),
+                0 -1px 1px 1px rgba(0,0,0,.1);
+    }
+
+    a.button16 {
+        display: inline-block;
+        text-decoration: none;
+        padding: 1em;
+        outline: none;
+        border-radius: 1px;
+    }
+    a.button16:hover {
+        background-image:
+                radial-gradient(1px 45% at 0% 50%, rgba(0,0,0,.6), transparent),
+                radial-gradient(1px 45% at 100% 50%, rgba(0,0,0,.6), transparent);
+    }
+    a.button16:active {
+        background-image:
+                radial-gradient(45% 45% at 50% 100%, rgba(255,255,255,.9), rgba(255,255,255,0)),
+                linear-gradient(rgba(255,255,255,.4), rgba(255,255,255,.3));
+        box-shadow:
+                inset rgba(162,95,42,.4) 0 0 0 1px,
+                inset rgba(255,255,255,.9) 0 0 1px 3px;
     }
     <style>
 

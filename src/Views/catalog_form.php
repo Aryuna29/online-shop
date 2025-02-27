@@ -1,8 +1,8 @@
 <section class="cards">
-<div class="card-profile"><a href="http://localhost:81/profile" type="button">Мой профиль</a></div>
-<div class="card-cart"><a href="http://localhost:81/cart" type="button">Корзина</a></div>
-
-    <div class="card-exit"><a href="/logout" type="button">Выход</a></div>
+    <a href="http://localhost:81/profile" class="button16">Мой профиль</a>
+    <a href="http://localhost:81/cart" class="button16">Корзина</a>
+    <a href="http://localhost:81/OrderUsers" class="button16">Мои заказы</a>
+    <a href="/logout" class="button16">Выход</a>
 <h3>Каталог</h3>
 
     <div class="container container-cards">
@@ -10,31 +10,29 @@
                 <div class="card">
                     <div class="card-top">
                         <a href="#" class="card-img">
-                         <img src="<?php echo $product['image_url']?>"  alt="Card image"/>
+                         <img src="<?php echo $product->getImageUrl();?>"  alt="Card image"/>
                         </a>
                     </div>
                             <div class="card-body">
                                 <div class="card-prices">
-                                 <div class="card-price"> <?php echo $product['price']; ?></div>
+                                 <div class="card-price"> <?php echo $product->getPrice(); ?></div>
                             </div>
-                            <div class="card-title"> <?php echo $product['name']; ?> </div>
-                                <div class="card-desc"> <?php echo $product['description']; ?> </div>
+                            <div class="card-title"> <?php echo $product->getName(); ?> </div>
+                                <div class="card-desc"> <?php echo $product->getDescription(); ?> </div>
+                                <form action="catalog" method="POST">
+                                    <div class="card-title">
+                                        <input type="hidden" placeholder="Enter Product-id" name="product_id" value="<?php echo $product->getId();?>" id="product_id" required>
+                                        <?php if (isset($errors['amount'])): ?>
+                                            <label style="color: brown"> <?php echo $errors['amount'];?> </label>
+                                        <?php endif; ?>
+                                        <input type="text" placeholder="количество" name="amount" id="amount" required>
+                                        <button type="submit" name="submit">Добавить</button>
+                                    </div>
+
+                                </form>
                         </div>
                 </div>
-                    <form action="catalog" method="POST">
-                        <div class="container">
-                            <input type="hidden" placeholder="Enter Product-id" name="product_id" value="<?php echo $product['id'];?>" id="product_id" required>
 
-                            <label for="amount"><b>Amount</b></label>
-                            <?php if (isset($errors['amount'])): ?>
-                                <label style="color: brown"> <?php echo $errors['amount'];?> </label>
-                            <?php endif; ?>
-                            <input type="text" placeholder="Enter Amount" name="amount" id="amount" required>
-                            <hr>
-                            <button type="submit" name="submit">Добавить в корзину</button>
-                        </div>
-
-                    </form>
                 <?php endforeach;?>
             </div>
     </div>
@@ -50,26 +48,6 @@
         line-height: 1.2;
         color: #333333;
         text-align: justify-all;
-    }
-    .card-cart{
-        margin-right: 60px;
-        display: block;
-        margin-bottom: 10px;
-        font-weight: 700;
-        font-size: 18px;
-        line-height: 0;
-        color: black;
-        text-align: right;
-    }
-    .card-profile{
-        display: block;
-        margin-right: 60px;
-        margin-bottom: 10px;
-        font-weight: 700;
-        font-size: 18px;
-        line-height: 2;
-        color: black;
-        text-align: right;
     }
 
     .container {
@@ -172,16 +150,25 @@
         text-align: center;
     }
 
-    .card-btn {
-        display: block;
-        width: 100%;
-        font-weight:700;
-        font-size: 16px;
-        color: #70c05b;
-        padding: 10px;
-        text-align: center;
-        border: 1px solid #70c05b;
-        border-radius: 4px;
+    a.button16 {
+        display: inline-block;
+        text-decoration: none;
+        padding: 1em;
+        outline: none;
+        border-radius: 1px;
+    }
+    a.button16:hover {
+        background-image:
+                radial-gradient(1px 45% at 0% 50%, rgba(0,0,0,.6), transparent),
+                radial-gradient(1px 45% at 100% 50%, rgba(0,0,0,.6), transparent);
+    }
+    a.button16:active {
+        background-image:
+                radial-gradient(45% 45% at 50% 100%, rgba(255,255,255,.9), rgba(255,255,255,0)),
+                linear-gradient(rgba(255,255,255,.4), rgba(255,255,255,.3));
+        box-shadow:
+                inset rgba(162,95,42,.4) 0 0 0 1px,
+                inset rgba(255,255,255,.9) 0 0 1px 3px;
     }
 
 
