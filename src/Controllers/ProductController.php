@@ -81,9 +81,9 @@ class ProductController
         $products =[];
         foreach ($userProducts as $userProduct) {
             $product = $this->productModel->getById($userProduct->getProductId());
-            $userProduct[] = $product;
-            $products[] = $userProduct;
-
+            $newUserProduct['amount'] = $userProduct;
+            $newUserProduct['product'] = $this->productModel->setProduct($product);
+            $products[] =$newUserProduct;
             if (isset($_POST['submit'])) {
                 $user_id = $_SESSION['userId'];
                     $this->userProductModel->deleteById($userProduct->getProductId(), $user_id);

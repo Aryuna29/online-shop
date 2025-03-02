@@ -3,18 +3,10 @@
 use Controllers\OrderController;
 use Controllers\ProductController;
 use Controllers\UserController;
+require_once './../Core/Autoloader.php';
 
-$autoload = function (string $className) {
-    $name = str_replace('\\', '/', $className);
-    $path = "../$name.php";
-    if (file_exists($path)) {
-        require_once $path;
-        return true;
-    }
-    return false;
-};
-
-spl_autoload_register($autoload);
+$path = dirname(__DIR__);
+\Core\Autoloader::register($path);
 
 $app = new \Core\App();
 $app->addRoute('/registration', 'GET', UserController::class, 'getRegistrate');

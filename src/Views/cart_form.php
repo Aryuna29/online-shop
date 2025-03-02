@@ -8,20 +8,20 @@
 
         <?php foreach ($products as $product): ?>
         <div class="card-name">
-            <img src="<?php echo $product->getImageUrl();?>" height="350" width="280" alt="Card image"/>
+            <img src="<?php echo $product['product']->getImageUrl();?>" height="350" width="280" alt="Card image"/>
         </div>
             <div class="card-name">
-                <label for="product_id"><?php echo $product->getName();?></label>
+                <label for="product_id"><?php echo $product['product']->getName();?></label>
             </div>
             <div class="card-name">
-                <label for="product_id"> <?php echo $product->getDescription();?></label>
+                <label for="product_id"> <?php echo $product['product']->getDescription();?></label>
             </div>
             <div class="card-name">
-                <label for="product_id"> <?php echo $product->getPrice();?></label>
+                <label for="product_id"> <?php echo $product['product']->getPrice();?></label>
             </div>
 
         <div class="card-e">
-            <label for="amount">Количество: <?php echo $product->getAmount();?></label>
+            <label for="amount">Количество: <?php echo $product['amount']->getAmount();?></label>
         </div>
 
         <?php endforeach;?>

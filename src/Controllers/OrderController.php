@@ -40,10 +40,11 @@ class OrderController
 
             $productData = $this->productModel->getById($productId);
 
-            $productData['amount'] = $product->getAmount();
-            $productData['cost'] = $product->getAmount() * $productData->getPrice();
-            $newProductOrder[] = $productData;
-            $totalCost += $productData['cost'];
+            $newProduct['product'] = $productData;
+            $newProduct['amount'] = $product->getAmount();
+            $newProduct['cost'] = $product->getAmount() * $productData->getPrice();
+            $newProductOrder[] = $newProduct;
+            $totalCost += $newProduct['cost'];
         }
             require_once '../Views/order_form.php';
     }
@@ -150,16 +151,17 @@ class OrderController
                 $sum = 0;
                 foreach ($orderProducts as $orderProduct) {
                     $product = $this->productModel->getById($orderProduct->getProductId());
-                    $orderProduct['name'] = $product->getName();
-                    $orderProduct['price'] = $product->getPrice();
-                    $orderProduct['totalSum'] = $orderProduct->getAmount() * $orderProduct->getPrice();
-                    $newOrderProducts[] = $orderProduct;
+                    $newOrderProduct['product'] = $product;
+                    $newOrderProduct['amount'] = $orderProduct->getAmount();
+                    $newOrderProduct['totalSum'] = $orderProduct->getAmount() * $product->getPrice();
+                    $newOrderProducts[] = $newOrderProduct;
 
-                    $sum += $orderProduct['totalSum'];
+                    $sum += $newOrderProduct['totalSum'];
                 }
-                $userOrder['total'] = $sum;
-                $userOrder['products'] = $newOrderProducts;
-                $newUserOrders[] = $userOrder;
+                $userOrderNew['user'] = $userOrder;
+                $userOrderNew['total'] = $sum;
+                $userOrderNew['products'] = $newOrderProducts;
+                $newUserOrders[] = $userOrderNew;
             }
         require_once '../Views/orderUsers_form.php';
     }

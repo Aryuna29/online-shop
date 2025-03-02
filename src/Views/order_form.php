@@ -31,8 +31,8 @@
         <hr>
         <div class="order"><h2>Заказ</h2></div>
         <?php foreach ($newProductOrder as $product): ?>
-        <div class="order"><li><strong><?php echo $product->getName();?><br> </strong>
-        <label>Стоимость <?php echo $product['amount'];?> шт * <?php echo $product->getPrice();?>₽ : <?php echo $product['cost'];?>₽</label></li></div>
+        <div class="order"><li><strong><?php echo $product['product']->getName();?><br> </strong>
+        <label>Стоимость <?php echo $product['amount'];?> шт * <?php echo $product['product']->getPrice();?>₽ : <?php echo $product['cost'];?>₽</label></li></div>
         <?php endforeach;?>
         <div class="order"><h2>Общая стоимость: <?php echo $totalCost;?> ₽</h2> </div>
         <hr>

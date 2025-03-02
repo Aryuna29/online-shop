@@ -8,27 +8,31 @@
     <div class="container container-cards">
         <?php foreach ($newUserOrders as $newUserOrder): ?>
             <div class="card">
-                   <label>Номер заказа: <?php echo $newUserOrder->getId();?></label>
+                   <label>Номер заказа: <?php echo $newUserOrder['user']->getId();?></label>
                 <br>
-                <label>Имя: <?php echo $newUserOrder->getContactName();?></label>
+                <label>Имя: <?php echo $newUserOrder['user']->getContactName();?></label>
                 <br>
-                <label>Телефон: <?php echo $newUserOrder->getContactPhone();?></label>
+                <label>Телефон: <?php echo $newUserOrder['user']->getContactPhone();?></label>
                 <br>
-                <label>Адрес: <?php echo $newUserOrder->getAddress();?></label>
+                <label>Адрес: <?php echo $newUserOrder['user']->getAddress();?></label>
                 <br>
-                <label>Комментарий: <?php echo $newUserOrder->getComment();?></label>
+                <label>Комментарий: <?php echo $newUserOrder['user']->getComment();?></label>
                 <br>
                 <hr>
                 <?php foreach ($newUserOrder['products'] as $newOrderProduct): ?>
-                    <div class="order"><li><?php echo $newOrderProduct['name'];?>
-                            <label><?php echo $newOrderProduct['price'];?>₽
-                                <?php echo $newOrderProduct['amount'];?> шт:
-                                <?php echo $newOrderProduct['totalSum'];?>₽
+                    <br>
+                    <div class="order"><li><?php echo $newOrderProduct['product']->getName();?>
+                            <br>
+                            <img src="<?php echo $newOrderProduct['product']->getImageUrl();?>" height="130" width="100" alt="Card image"/>
+                            <br>
+                            <label>
+                                Количество: <?php echo $newOrderProduct['amount'];?> шт
+                                <br>
+                                Сумма: <?php echo $newOrderProduct['totalSum'];?>₽
                             <br>
                             </label></li></div>
                 <?php endforeach;?>
-
-                <label>Сумма заказа: <?php echo $newUserOrder['total'];?>₽</label>
+                <h4>Сумма заказа: <?php echo $newUserOrder['total'];?>₽</h4>
             </div>
 
         <?php endforeach;?>
@@ -66,9 +70,9 @@
     }
     .card {
         margin:auto;
-        overflow: hidden;
         width: 275px;
-        min-height: 300px;
+        height: 600px;
+        overflow: auto;
         box-shadow: 1px 2px 4px rgba(0,0,0,0.1);
         display: flex;
         flex-direction: column;

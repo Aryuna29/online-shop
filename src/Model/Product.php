@@ -47,6 +47,15 @@ class Product extends Model
     }
 
 
+    public function setProduct($product)
+    {
+        $this->id = $product->getId();
+        $this->name = $product->getName();
+        $this->description = $product->getDescription();
+        $this->price = $product->getPrice();
+        $this->image_url = $product->getImageUrl();
+        return $product;
+    }
     public function getId(): int
     {
         return $this->id;
