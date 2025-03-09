@@ -1,13 +1,16 @@
 <?php
 
 namespace Model;
-//require_once '../Model/Model.php';
+
 class OrderProduct extends Model
 {
     private int $id;
     private int $order_id;
     private int $product_id;
     private int $amount;
+    private int $sum;
+    private Product $product;
+    private OrderProduct $orderProduct;
     public function create(int $orderId, int $productId, int $amount)
     {
         $stmt = $this->PDO->prepare(
@@ -35,6 +38,26 @@ class OrderProduct extends Model
             $result[] = $obj;
         }
         return $result;
+    }
+
+
+    public function setProduct(Product $product)
+    {
+        $this->product = $product;
+    }
+    public function getProduct(): Product
+    {
+        return $this->product;
+    }
+
+    public function setSum(int $sum)
+    {
+        $this->sum = $sum;
+    }
+
+    public function getSum(): int
+    {
+        return $this->sum;
     }
 
     public function getId(): int

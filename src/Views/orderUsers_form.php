@@ -2,37 +2,38 @@
 <section class="cards">
     <a href="http://localhost:81/profile" class="button16">Мой профиль</a>
     <a href="http://localhost:81/cart" class="button16">Корзина</a>
+    <a href="http://localhost:81/catalog" class="button16">Каталог</a>
     <a href="/logout" class="button16">Выход</a>
     <h3>Мои заказы</h3>
 
     <div class="container container-cards">
         <?php foreach ($newUserOrders as $newUserOrder): ?>
             <div class="card">
-                   <label>Номер заказа: <?php echo $newUserOrder['user']->getId();?></label>
+                   <label>Номер заказа: <?php echo $newUserOrder->getId();?></label>
                 <br>
-                <label>Имя: <?php echo $newUserOrder['user']->getContactName();?></label>
+                <label>Имя: <?php echo $newUserOrder->getContactName();?></label>
                 <br>
-                <label>Телефон: <?php echo $newUserOrder['user']->getContactPhone();?></label>
+                <label>Телефон: <?php echo $newUserOrder->getContactPhone();?></label>
                 <br>
-                <label>Адрес: <?php echo $newUserOrder['user']->getAddress();?></label>
+                <label>Адрес: <?php echo $newUserOrder->getAddress();?></label>
                 <br>
-                <label>Комментарий: <?php echo $newUserOrder['user']->getComment();?></label>
+                <label>Комментарий: <?php echo $newUserOrder->getComment();?></label>
                 <br>
                 <hr>
-                <?php foreach ($newUserOrder['products'] as $newOrderProduct): ?>
+                <?php foreach ($newUserOrder->getNewOrderProducts() as $newOrderProduct): ?>
                     <br>
-                    <div class="order"><li><?php echo $newOrderProduct['product']->getName();?>
+                    <div class="order"><li><?php echo $newOrderProduct->getProduct()->getName();?>
                             <br>
-                            <img src="<?php echo $newOrderProduct['product']->getImageUrl();?>" height="130" width="100" alt="Card image"/>
+                            <img src="<?php echo $newOrderProduct->getProduct()->getImageUrl();?>" height="130" width="100" alt="Card image"/>
                             <br>
                             <label>
-                                Количество: <?php echo $newOrderProduct['amount'];?> шт
+                                Количество: <?php echo $newOrderProduct->getAmount();?> шт
                                 <br>
-                                Сумма: <?php echo $newOrderProduct['totalSum'];?>₽
+                                Сумма: <?php echo $newOrderProduct->getSum();?>₽
                             <br>
                             </label></li></div>
                 <?php endforeach;?>
-                <h4>Сумма заказа: <?php echo $newUserOrder['total'];?>₽</h4>
+                <h4>Сумма заказа: <?php echo $newUserOrder->getTotal();?>₽</h4>
             </div>
 
         <?php endforeach;?>

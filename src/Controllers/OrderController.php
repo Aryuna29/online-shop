@@ -7,7 +7,7 @@ use Model\OrderProduct;
 use Model\Product;
 use Model\UserProduct;
 
-class OrderController
+class OrderController extends BaseController
 {
 
     private  UserProduct $userProductModel;
@@ -21,66 +21,78 @@ class OrderController
         $this->productModel = new Product();
         $this->orderModel = new Order();
         $this->orderProductModel = new OrderProduct();
+        parent::__construct();
     }
+
+
     public function getCheckoutForm()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-        if (!isset($_SESSION['userId'])) {
+        if (!$this->authService->check()) {
             header('location: /login');
         }
-        $userId = $_SESSION['userId'];
+        $user = $this->authService->getCurrentUser();
 
-        $products = $this->userProductModel->getALLByUserId($userId);
+        $products = $this->userProductModel->getALLByUserId($user->getId());
         $newProductOrder =[];
         $totalCost = 0;
+
         foreach ($products as $product) {
             $productId = $product->getProductId();
 
             $productData = $this->productModel->getById($productId);
 
-            $newProduct['product'] = $productData;
-            $newProduct['amount'] = $product->getAmount();
-            $newProduct['cost'] = $product->getAmount() * $productData->getPrice();
-            $newProductOrder[] = $newProduct;
-            $totalCost += $newProduct['cost'];
+            $product->setProduct($productData);
+            $product->setSum($product->getAmount() * $productData->getPrice());
+            $cost = $product->getSum();
+            $newProductOrder[] = $product;
+            $totalCost += $cost;
         }
             require_once '../Views/order_form.php';
     }
 
     public function handleCheckout()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-        if (!isset($_SESSION['userId'])) {
+        if (!$this->authService->check()) {
             header('location: /login');
         }
 
         $errors = $this->Validate($_POST);
+        $user = $this->authService->getCurrentUser();
         if (empty($errors)) {
             $contactName = $_POST['contact_name'];
             $contactPhone = $_POST['contact_phone'];
             $address = $_POST['address'];
             $comment = $_POST['comment'];
-            $userId = $_SESSION['userId'];
 
-            $orderId = $this->orderModel->create($contactName, $contactPhone, $comment, $address, $userId);
 
-            $userProducts = $this->userProductModel->getALLByUserId($userId);
+            $orderId = $this->orderModel->create($contactName, $contactPhone, $comment, $address, $user->getId());
+
+            $userProducts = $this->userProductModel->getALLByUserId($user->getId());
 
             foreach ($userProducts as $userProduct) {
                 $productId = $userProduct->getProductId();
                 $amount = $userProduct->getAmount();
-
                 $this->orderProductModel->create($orderId, $productId, $amount);
             }
-
-            $this->userProductModel->deletelByUserId($userId);
+            $this->userProductModel->deletelByUserId($user->getId());
 
             header('location: /catalog');
         } else {
+            $products = $this->userProductModel->getALLByUserId($user->getId());
+            $newProductOrder =[];
+            $totalCost = 0;
+
+            foreach ($products as $product) {
+                $productId = $product->getProductId();
+
+                $productData = $this->productModel->getById($productId);
+
+                $product->setProduct($productData);
+                $product->setSum($product->getAmount() * $productData->getPrice());
+                $cost = $product->getSum();
+                $newProductOrder[] = $product;
+                $totalCost += $cost;
+            }
             require_once "../Views/order_form.php";
         }
 
@@ -133,35 +145,30 @@ class OrderController
 
     public function getUserOrder()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-        if (!isset($_SESSION['userId'])) {
+
+        if (!$this->authService->check()) {
             header('location: /login');
         }
-        $userId = $_SESSION['userId'];
+        $user = $this->authService->getCurrentUser();
 
-
-        $userOrders = $this->orderModel->getALLByUserId($userId);
+        $userOrders = $this->orderModel->getALLByUserId($user->getId());
             $newUserOrders = [];
-            foreach ($userOrders as $userOrder) {
-
-                $orderProducts = $this->orderProductModel->getALLByOrderId($userOrder->getId());
-                $newOrderProducts = [];
-                $sum = 0;
-                foreach ($orderProducts as $orderProduct) {
-                    $product = $this->productModel->getById($orderProduct->getProductId());
-                    $newOrderProduct['product'] = $product;
-                    $newOrderProduct['amount'] = $orderProduct->getAmount();
-                    $newOrderProduct['totalSum'] = $orderProduct->getAmount() * $product->getPrice();
-                    $newOrderProducts[] = $newOrderProduct;
-
-                    $sum += $newOrderProduct['totalSum'];
+            if ($userOrders != null) {
+                foreach ($userOrders as $userOrder) {
+                    $orderProducts = $this->orderProductModel->getALLByOrderId($userOrder->getId());
+                    $total = 0;
+                    $newOrderProducts = [];
+                    foreach ($orderProducts as $orderProduct) {
+                        $product = $this->productModel->getById($orderProduct->getProductId());
+                        $orderProduct->setProduct($product);
+                        $orderProduct->setSum($orderProduct->getAmount() * $product->getPrice());
+                        $total += $orderProduct->getSum();
+                        $newOrderProducts[] = $orderProduct;
+                    }
+                    $userOrder->setNewOrderProducts($newOrderProducts);
+                    $userOrder->setTotal($total);
+                    $newUserOrders[] = $userOrder;
                 }
-                $userOrderNew['user'] = $userOrder;
-                $userOrderNew['total'] = $sum;
-                $userOrderNew['products'] = $newOrderProducts;
-                $newUserOrders[] = $userOrderNew;
             }
         require_once '../Views/orderUsers_form.php';
     }

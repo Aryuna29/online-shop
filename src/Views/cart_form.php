@@ -3,32 +3,31 @@
         <a href="http://localhost:81/profile" class="button16">Мой профиль</a>
         <a href="http://localhost:81/catalog" class="button16">Каталог</a>
         <a href="http://localhost:81/OrderUsers" class="button16">Мои заказы</a>
+        <a href="/logout" class="button16">Выход</a>
         <h3>Корзина</h3>
         <hr>
-
         <?php foreach ($products as $product): ?>
+
         <div class="card-name">
-            <img src="<?php echo $product['product']->getImageUrl();?>" height="350" width="280" alt="Card image"/>
+            <img src="<?php echo $product->getProduct()->getImageUrl();?>" height="350" width="280" alt="Card image"/>
         </div>
             <div class="card-name">
-                <label for="product_id"><?php echo $product['product']->getName();?></label>
+                <label for="product_id"><?php echo $product->getProduct()->getName();?></label>
             </div>
             <div class="card-name">
-                <label for="product_id"> <?php echo $product['product']->getDescription();?></label>
+                <label for="product_id"> <?php echo $product->getProduct()->getDescription();?></label>
             </div>
             <div class="card-name">
-                <label for="product_id"> <?php echo $product['product']->getPrice();?></label>
+                <label for="product_id"> <?php echo $product->getProduct()->getPrice();?></label>
             </div>
 
         <div class="card-e">
-            <label for="amount">Количество: <?php echo $product['amount']->getAmount();?></label>
+            <label for="amount">Количество: <?php echo $product->getAmount();?></label>
         </div>
 
         <?php endforeach;?>
-        <form class="mt-4">
-            <button type="submit" name="submit" class="btn btn-outline-primary btn-lg btn-block">Удалить</button>
-        </form>
 
+        <button type="submit" name="submit" class="button21" >Очистить корзину</button>
         <a href="http://localhost:81/create-order" class="button21">заказать</a>
     </div>
         <hr>

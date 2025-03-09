@@ -2,7 +2,9 @@
     <form action="profile" method="post">
         <div class="card-link">
                 <a href="http://localhost:81/catalog" class="button16">Каталог</a>
-            </li>
+            <a href="http://localhost:81/cart" class="button16">Корзина</a>
+            <a href="http://localhost:81/OrderUsers" class="button16">Мои заказы</a>
+            <a href="/logout" class="button16">Выход</a>
         </div>
         <div class="card-info">
             <h3>Профиль</h3>

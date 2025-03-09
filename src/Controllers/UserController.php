@@ -3,21 +3,22 @@
 namespace Controllers;
 
 use Model\User;
+use Service\AuthService;
 
-class UserController
+class UserController extends BaseController
 {
     private User $userModel;
-
     public function __construct()
     {
         $this->userModel = new User();
+       parent::__construct();
     }
+
+
     public function getRegistrate()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-        if (isset($_SESSION['userId'])) {
+
+        if ($this->authService->check()) {
             header('location: /catalog');
         }
         require_once '../Views/registration_form.php';
@@ -96,30 +97,18 @@ class UserController
 
     public function login()
     {
-
         $errors = $this->validateLogin($_POST);
+        $email = $_POST['u'];
+        $password = $_POST['p'];
 
         if (empty($errors)) {
-            $email = $_POST['u'];
-            $password = $_POST['p'];
+            $result = $this->authService->auth($email, $password);
 
-            $user = $this->userModel->getByEmail($email);
-
-            if ($user === false) {
+            if (!$result) {
                 $errors['username'] = 'логин или пароль указаны неверно';
             } else {
-                $passwordDB = $user->getPassword();
-                if (password_verify($password, $passwordDB)) {
-                    if (session_status() !== PHP_SESSION_ACTIVE) {
-                        session_start();
-                    }
-                    $_SESSION['userId'] = $user->getId();
-                    header("Location: http://localhost:81/catalog");
-                } else {
-                    $errors['username'] = 'логин или пароль указаны неверно';
-                }
+                header("Location: http://localhost:81/catalog");
             }
-
         }
         require_once '../Views/login_form.php';
     }
@@ -136,20 +125,13 @@ class UserController
         return $errors;
     }
 
-    public function getProfile()
-    {
-        require_once '../Views/profile_form.php';
-    }
 
     public function profile()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-        if (isset($_SESSION['userId'])) {
-            $userId = $_SESSION['userId'];
 
-            $user = $this->userModel->getById($userId);
+        if ($this->authService->check()) {
+            $user = $this->authService->getCurrentUser();
+
             require_once '../Views/profile_form.php';
         } else {
             header('Location: http://localhost:81/login');
@@ -159,19 +141,22 @@ class UserController
 
     public function getProfileEdited()
     {
-        require_once '../Views/FORMeditedProfile.php';
+        if ($this->authService->check()) {
+            $userId = $this->authService->getCurrentUser();
+
+            $user = $this->userModel->getById($userId->getId());
+            require_once '../Views/FORMeditedProfile.php';
+        }
     }
 
     public function profileEdited()
     {
 
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-        if (isset($_SESSION['userId'])) {
-            $userId = $_SESSION['userId'];
 
-            $user = $this->userModel->getById($userId);
+        if ($this->authService->check()) {
+            $userId = $this->authService->getCurrentUser();
+
+            $user = $this->userModel->getById($userId->getId());
 
             if (isset($_POST['submit'])) {
                 $errors = $this->validateProfile($_POST);
@@ -179,15 +164,14 @@ class UserController
                     $name = $_POST['name'];
                     $email = $_POST['email'];
                     if ($user->getName() !== $name) {
-                        $this->userModel->updateNameById($userId, $name);
+                        $this->userModel->updateNameById($userId->getId(), $name);
                     }
                     if ($user->getEmail() !== $email) {
-                        $this->userModel->updateEmailById($userId, $email);
+                        $this->userModel->updateEmailById($userId->getId(), $email);
                     }
                     header('Location: http://localhost:81/profile');
                     exit;
                 }
-
             }
             require_once '../Views/FORMeditedProfile.php';
         } else {
@@ -226,13 +210,8 @@ class UserController
 
     public function logout()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-            session_unset();
-            session_destroy();
+        $this->authService->logout();
             header("Location: /login");
-            require_once '../Views/logout.php';
             exit();
     }
 

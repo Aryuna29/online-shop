@@ -2,9 +2,6 @@
 <div class="container">
     <form action="editedProfile" method="POST">
         <div class="card-link">
-            <li ng-class="{ active: isSet(2) }">
-                <a href="http://localhost:81/catalog" ng-click="setTab(2)">Каталог</a>
-            </li>
         </div>
         <div class="card-info">
             <h3>Профиль</h3>

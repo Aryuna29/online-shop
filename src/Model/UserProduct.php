@@ -7,6 +7,8 @@ class UserProduct extends Model
     private int $user_id;
     private int $product_id;
     private int $amount;
+    private Product $product;
+    private int $sum;
 
     public function getById(int $product_id, int $user_id): self|null
     {
@@ -67,6 +69,24 @@ class UserProduct extends Model
         $stmt->execute(['user_id' => $user_id]);
     }
 
+    public function setProduct(Product $product)
+    {
+        $this->product = $product;
+    }
+    public function getProduct(): Product
+    {
+        return $this->product;
+    }
+    public function setSum(int $sum)
+{
+    $this->sum = $sum;
+}
+
+    public function getSum(): int
+    {
+        return $this->sum;
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -82,7 +102,7 @@ class UserProduct extends Model
         return $this->product_id;
     }
 
-    public function getAmount(): int
+    public function getAmount(): int|null
     {
         return $this->amount;
     }

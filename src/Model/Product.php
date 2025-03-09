@@ -9,8 +9,9 @@ class Product extends Model
     private string $description;
     private string $price;
     private string $image_url;
-
-    public function getProduct(): array|null
+    private array $reviewsNew;
+    private int $amount;
+    public function getProducts(): array|null
     {
         $stmt = $this->PDO->query('SELECT * FROM products');
         $result = $stmt->fetchAll();
@@ -47,14 +48,21 @@ class Product extends Model
     }
 
 
-    public function setProduct($product)
+    public function setAmount(int $amount)
     {
-        $this->id = $product->getId();
-        $this->name = $product->getName();
-        $this->description = $product->getDescription();
-        $this->price = $product->getPrice();
-        $this->image_url = $product->getImageUrl();
-        return $product;
+        $this->amount = $amount;
+    }
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
+    public function setReviewsNew(array $reviewsNew)
+    {
+        $this->reviewsNew = $reviewsNew;
+    }
+    public function getReviewsNew()
+    {
+        return $this->reviewsNew;
     }
     public function getId(): int
     {

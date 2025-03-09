@@ -19,23 +19,29 @@
                             </div>
                             <div class="card-title"> <?php echo $product->getName(); ?> </div>
                                 <div class="card-desc"> <?php echo $product->getDescription(); ?> </div>
-                                <form action="catalog" method="POST">
-                                    <div class="card-title">
-                                        <input type="hidden" placeholder="Enter Product-id" name="product_id" value="<?php echo $product->getId();?>" id="product_id" required>
-                                        <?php if (isset($errors['amount'])): ?>
-                                            <label style="color: brown"> <?php echo $errors['amount'];?> </label>
-                                        <?php endif; ?>
-                                        <input type="text" placeholder="количество" name="amount" id="amount" required>
-                                        <button type="submit" name="submit">Добавить</button>
-                                    </div>
+                                <div class='quantity_inner'>
+                                    <form action="/decrease" method="POST">
+                                        <input type="hidden" name="product_id" value="<?php echo $product->getId();?>" id="product_id" required>
+                                        <input  name="amount" type="hidden" id="amount" value="1" required>
+                                        <button name="submit" class="bt_minus"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                                    </form>
+                                    <input type="text" value="<?php echo $product->getAmount();?>" size="1" class="quantity" readonly/>
+                                    <form action="/add" method="POST">
+                                        <input type="hidden" name="product_id" value="<?php echo $product->getId();?>" id="product_id" required>
+                                        <input  name="amount" type="hidden" id="amount" value="1" required>
+                                        <button name="submit" class="bt_plus"> <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                                    </form>
+                                </div>
 
-                                </form>
+                                    <form action="/product" method="POST">
+                                        <input type="hidden" placeholder="Enter Product-id" name="product_id" value="<?php echo $product->getId();?>" id="product_id" required>
+                                        <input type="submit" value="открыть">
+                                    </form>
                         </div>
                 </div>
 
                 <?php endforeach;?>
             </div>
-    </div>
 </section>
 
 <style>
@@ -122,6 +128,7 @@
 
     .card-body {
         flex: 1 0 auto;
+        text-align:center;
     }
 
     .card-prices {
@@ -171,5 +178,46 @@
                 inset rgba(255,255,255,.9) 0 0 1px 3px;
     }
 
+
+    .quantity_inner * {
+        box-sizing: border-box;
+    }
+    .quantity_inner {
+        display: inline-flex;
+        height: 30px;
+        border-radius: 26px;
+        border: 4px solid lightslategrey;
+    }
+    .quantity_inner .bt_minus,
+    .quantity_inner .bt_plus,
+    .quantity_inner .quantity {
+        height: 30px;
+        width: 30px;
+        padding: 0;
+        border: 0;
+        margin: 0;
+        background: transparent;
+        cursor: pointer;
+        outline: 0;
+    }
+    .quantity_inner .quantity {
+        width: 25px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        color: #000;
+        font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    }
+    .quantity_inner .bt_minus svg,
+    .quantity_inner .bt_plus svg {
+        stroke: lightslategrey;
+        stroke-width: 4;
+        transition: 0.5s;
+        margin: 10px;
+    }
+    .quantity_inner .bt_minus:hover svg,
+    .quantity_inner .bt_plus:hover svg {
+        stroke: #000;
+    }
 
 </style>

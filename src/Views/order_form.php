@@ -1,6 +1,9 @@
 
-<a href="http://localhost:81/cart" class="button16">Корзина</a>
 <a href="http://localhost:81/OrderUsers" class="button16">Мои заказы</a>
+<a href="http://localhost:81/profile" class="button16">Мой профиль</a>
+<a href="http://localhost:81/cart" class="button16">Корзина</a>
+<a href="http://localhost:81/catalog" class="button16">Каталог</a>
+<a href="/logout" class="button16">Выход</a>
 <form action="create-order" method="POST">
     <div class="container">
         <h3>Заказ</h3>
@@ -9,30 +12,30 @@
         <?php if (isset($errors['contact_name'])): ?>
             <label style="color: brown"> <?php echo $errors['contact_name'];?> </label>
         <?php endif; ?>
-        <input type="text" placeholder="Enter contact name" name="contact_name" id="contact_name" required>
+        <input type="text" placeholder="Имя" name="contact_name" id="contact_name" required>
 
         <label for="contact_phone"><b>Телефон</b></label>
         <?php if (isset($errors['contact_phone'])): ?>
             <label style="color: brown"> <?php echo $errors['contact_phone'];?> </label>
         <?php endif; ?>
-        <input type="text" placeholder="Enter contact phone" name="contact_phone" id="contact_phone" required>
+        <input type="text" placeholder="Номер телефона" name="contact_phone" id="contact_phone" required>
 
         <label for="address"><b>Адрес</b></label>
         <?php if (isset($errors['address'])): ?>
             <label style="color: brown"> <?php echo $errors['address'];?> </label>
         <?php endif; ?>
-        <input type="text" placeholder="Enter address" name="address" id="address" required>
+        <input type="text" placeholder="Название улицы, номер дома, номер квартиры" name="address" id="address" required>
 
         <label for="comment"><b>Комментарий</b></label>
         <?php if (isset($errors['comment'])): ?>
             <label style="color: brown"> <?php echo $errors['comment'];?> </label>
         <?php endif; ?>
-        <input type="text" placeholder="Enter comment" name="comment" id="comment" required>
+        <input type="text" placeholder="Комментарий" name="comment" id="comment" required>
         <hr>
         <div class="order"><h2>Заказ</h2></div>
         <?php foreach ($newProductOrder as $product): ?>
-        <div class="order"><li><strong><?php echo $product['product']->getName();?><br> </strong>
-        <label>Стоимость <?php echo $product['amount'];?> шт * <?php echo $product['product']->getPrice();?>₽ : <?php echo $product['cost'];?>₽</label></li></div>
+        <div class="order"><li><strong><?php echo $product->getProduct()->getName();?><br> </strong>
+        <label>Стоимость <?php echo $product->getAmount();?> шт * <?php echo $product->getProduct()->getPrice();?>₽ : <?php echo $product->getSum();?>₽</label></li></div>
         <?php endforeach;?>
         <div class="order"><h2>Общая стоимость: <?php echo $totalCost;?> ₽</h2> </div>
         <hr>
@@ -55,11 +58,11 @@
 
     * {box-sizing: border-box}
 
-    /* Add padding to containers */
+
     .container {
         display: inline-block;
         margin-left: 300px;
-        margin-right: auto;
+        margin-right: 300px;
     }
 
     .order {

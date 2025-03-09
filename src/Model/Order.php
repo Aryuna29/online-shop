@@ -1,8 +1,6 @@
 <?php
 
 namespace Model;
-//require_once '../Model/Model.php';
-use PDO;
 
 class Order extends Model
 {
@@ -12,6 +10,9 @@ class Order extends Model
     private string $comment;
     private int $user_id;
     private string $address;
+    private int $total;
+    private array $newOrderProducts;
+
 
     public function create(
         string $contactName,
@@ -35,7 +36,7 @@ class Order extends Model
         $data = $stmt->fetch();
         return $data['id'];
     }
-    public function getALLByUserId($user_id): array|null
+    public function getALLByUserId(int $user_id): array|null
     {
         $stmt = $this->PDO->prepare("SELECT * FROM orders WHERE user_id = :userId");
         $stmt->execute(['userId' => $user_id]);
@@ -57,6 +58,23 @@ class Order extends Model
         return $orders;
     }
 
+public function setNewOrderProducts(array $newOrderProducts)
+{
+    $this->newOrderProducts = $newOrderProducts;
+}
+
+    public function getNewOrderProducts()
+    {
+        return $this->newOrderProducts;
+    }
+    public function setTotal(int $total)
+    {
+        $this->total = $total;
+    }
+    public function getTotal(): int
+    {
+        return  $this->total;
+    }
     public function getId(): int
     {
         return $this->id;
