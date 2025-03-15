@@ -11,26 +11,26 @@ class Order extends Model
     private int $user_id;
     private string $address;
     private int $total;
-    private array $newOrderProducts;
+    private array $orderProducts;
 
 
     public function create(
         string $contactName,
         string $contactPhone,
-        string $comment,
         string $address,
+        string $comment,
         int $userId
     )
     {
         $stmt = $this->PDO->prepare(
-            "INSERT INTO orders (contact_name, contact_phone, comment, address, user_id)
-                    VALUES (:name, :phone, :comment, :address, :user_id) RETURNING id"
+            "INSERT INTO orders (contact_name, contact_phone, address, comment, user_id)
+                    VALUES (:name, :phone,  :address, :comment, :user_id) RETURNING id"
         );
         $stmt->execute(
             ['name' => $contactName,
                 'phone' => $contactPhone,
-                'comment' => $comment,
                 'address' => $address,
+                'comment' => $comment,
                 'user_id' =>$userId
             ]);
         $data = $stmt->fetch();
@@ -58,14 +58,14 @@ class Order extends Model
         return $orders;
     }
 
-public function setNewOrderProducts(array $newOrderProducts)
+public function setOrderProducts(array $orderProducts)
 {
-    $this->newOrderProducts = $newOrderProducts;
+    $this->orderProducts = $orderProducts;
 }
 
-    public function getNewOrderProducts()
+    public function getOrderProducts()
     {
-        return $this->newOrderProducts;
+        return $this->orderProducts;
     }
     public function setTotal(int $total)
     {

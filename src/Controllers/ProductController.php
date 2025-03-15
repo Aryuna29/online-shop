@@ -2,10 +2,16 @@
 
 namespace Controllers;
 
+use DTO\CartAddProductDTO;
+use DTO\CartDecreaseProductDTO;
 use Model\User;
 use Model\UserProduct;
 use Model\Product;
 use Model\Review;
+use Request\AddProductRequest;
+use Request\DecreaseProductRequest;
+use Request\AddReviewsRequest;
+use Request\GetProductRequest;
 use Service\CartService;
 
 class ProductController extends BaseController
@@ -34,6 +40,7 @@ class ProductController extends BaseController
         $user = $this->authService->getCurrentUser();
 
         $products = $this->productModel->getProducts();
+
         foreach ($products as $product) {
             $userProduct = $this->userProductModel->getById($product->getId(), $user->getId());
             if ($userProduct === null) {
@@ -46,37 +53,31 @@ class ProductController extends BaseController
 
         require_once '../Views/catalog_form.php';
     }
-    public function addProductCatalog()
+    public function addProduct(AddProductRequest $request)
     {
 
         if (!$this->authService->check()) {
             header('Location:http://localhost:81/login');
             exit();
         }
-        if (isset($_POST['submit'])) {
-
-               $data = $_POST;
-                $user = $this->authService->getCurrentUser();
-                $this->cartService->addProduct($data['product_id'], $user->getId(), $data['amount']);
+                $dtoAdd = new CartAddProductDTO($request->getProductId(), $request->getAmount());
+                $this->cartService->addProduct($dtoAdd);
                 header('Location: /catalog');
-            }
+
         require_once '../Views/catalog_form.php';
     }
 
-    public function decreaseProductCatalog()
+    public function decreaseProduct(DecreaseProductRequest $request)
     {
         if (!$this->authService->check()) {
             header('Location:http://localhost:81/login');
             exit();
         }
-        if (isset($_POST['submit'])) {
-                $data = $_POST;
-                $user = $this->authService->getCurrentUser();
-                $result = $this->cartService->decreaseProduct($data['product_id'], $user->getId(), $data['amount']);
+                $dtoDecrease = new CartDecreaseProductDTO($request->getProductId(), $request->getAmount());
+                $result = $this->cartService->decreaseProduct($dtoDecrease);
                 if (!$result) {
                     header('Location: /catalog');
                 }
-            }
         require_once '../Views/catalog_form.php';
     }
 
@@ -87,27 +88,12 @@ class ProductController extends BaseController
             header('Location:http://localhost:81/login');
             exit();
         }
-        $user = $this->authService->getCurrentUser();
-        $userId = $user->getId();
-
-        $userProducts = $this->userProductModel->getALLByUserId($userId);
-
-        $products =[];
-        foreach ($userProducts as $userProduct) {
-            $product = $this->productModel->getById($userProduct->getProductId());
-            $userProduct->setProduct($product);
-            $products[] = $userProduct;
-            if (isset($_POST['submit'])) {
-                $user = $_SESSION['userId'];
-                    $this->userProductModel->deleteById($userProduct->getProductId(), $userId);
-                    header('Location: http://localhost:81/cart');
-            }
-        }
+        $userProducts = $this->cartService->getUserProducts();
 
         require_once '../Views/cart_form.php';
     }
 
-    public function getProduct()
+    public function getProduct(GetProductRequest $request)
     {
         if (!$this->authService->check()) {
             header('Location:http://localhost:81/login');
@@ -115,43 +101,42 @@ class ProductController extends BaseController
         }
         $user = $this->authService->getCurrentUser();
         $userId = $user->getId();
-        $productId = $_POST['product_id'];
+        $productId = $request->getProductId();
         $product = $this->productModel->getById($productId);
         $reviews = $this->reviewModel->getAllReviews($productId);
-        foreach ($reviews as $review) {
-            $review->setUser($this->userModel->getById($review->getUserId()));
+        if ($reviews === null) {
+            $ratingTotal = 0;
+        } else {
+            $count = count($reviews);
+            $rating = 0;
+            foreach ($reviews as $review) {
+                $review->setUser($this->userModel->getById($review->getUserId()));
+                $rating += $review->getRating();
+            }
+            $ratingTotal = $rating / $count;
         }
             require_once '../Views/review_form.php';
     }
 
-    public function addReviews()
+    public function addReviews(AddReviewsRequest $request)
     {
         if (!$this->authService->check()) {
             header('Location:http://localhost:81/login');
             exit();
         }
-            $errors = $this->validateReview($_POST);
+            $errors = $request->validate();
 
             if (empty($errors)) {
                 $user = $this->authService->getCurrentUser();
                 $userId = $user->getId();
-                $productId = $_POST['product_id'];
-                $review = $_POST['review'];
-                $this->reviewModel->create($userId, $productId, $review);
+                $productId = $request->getProductId();
+                $review = $request->getReview();
+                $time = date("Y-m-d H:i:s");
+                $rating = $request->getRating();
+                $this->reviewModel->create($productId, $userId, $review, $time, $rating);
                 header('Location: /catalog');
             }
         require_once '../Views/review_form.php';
     }
-    private function validateReview(array $data): array|null
-    {
-        $errors = [];
 
-        if (isset($data['review'])) {
-            $review = $data['review'];
-            if (strlen($review) > 255) {
-                $errors['review'] = 'больше 255 символов!';
-            }
-        }
-        return $errors;
-    }
 }

@@ -33,11 +33,11 @@
         <input type="text" placeholder="Комментарий" name="comment" id="comment" required>
         <hr>
         <div class="order"><h2>Заказ</h2></div>
-        <?php foreach ($newProductOrder as $product): ?>
-        <div class="order"><li><strong><?php echo $product->getProduct()->getName();?><br> </strong>
-        <label>Стоимость <?php echo $product->getAmount();?> шт * <?php echo $product->getProduct()->getPrice();?>₽ : <?php echo $product->getSum();?>₽</label></li></div>
+        <?php foreach ($userProducts as $userProduct): ?>
+        <div class="order"><li><strong><?php echo $userProduct->getProduct()->getName();?><br> </strong>
+        <label>Стоимость <?php echo $userProduct->getAmount();?> шт * <?php echo $userProduct->getProduct()->getPrice();?>₽ : <?php echo $userProduct->getSum();?>₽</label></li></div>
         <?php endforeach;?>
-        <div class="order"><h2>Общая стоимость: <?php echo $totalCost;?> ₽</h2> </div>
+        <div class="order"><h2>Общая стоимость: <?php echo $userProduct->getTotalSum();?> ₽</h2> </div>
         <hr>
         <button type="submit" class="orderbtn">Оформить заказ</button>
     </div>

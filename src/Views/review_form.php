@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="card-top">
                         <a href="#" class="card-img">
-                            <img src="<?php echo $product->getImageUrl();?>"  alt="Card image"/>
+                            <img src="<?php echo $product->getImageUrl();?>" alt="Card image"/>
                         </a>
                     </div>
                     <div class="card-body">
@@ -20,6 +20,18 @@
                         <div class="card-desc"> <?php echo $product->getDescription(); ?> </div>
                 </div>
         </div>
+            <?php if ($reviews === null) {?>
+                <p>Нет отзывов</p>
+            <?php } else {?>
+            <p>Средний рейтинг <?php echo ceil($ratingTotal); ?></p>
+            <div class="rating-result">
+                <span class="<?php if (ceil($ratingTotal) >= 1) echo 'active'; ?>"></span>
+                <span class="<?php if (ceil($ratingTotal) >= 2) echo 'active'; ?>"></span>
+                <span class="<?php if (ceil($ratingTotal) >= 3) echo 'active'; ?>"></span>
+                <span class="<?php if (ceil($ratingTotal) >= 4) echo 'active'; ?>"></span>
+                <span class="<?php if (ceil($ratingTotal) >= 5) echo 'active'; ?>"></span>
+            </div>
+            <p>На основе <?php echo $count;?> оценок</p>
 
             <?php foreach ($reviews as $review): ?>
                 <br>
@@ -27,14 +39,40 @@
                 </div>
                 <div class="data"><?php echo $review->getReview();?>
                 </div>
-            <?php endforeach; ?>
+                <div class="time"><?php echo $review->getTime();?>
+                </div>
+                <div class="rating-mini">
+                    <span class="<?php if ($review->getRating() >= 1) echo 'active'; ?>"></span>
+                    <span class="<?php if ($review->getRating() >= 2) echo 'active'; ?>"></span>
+                    <span class="<?php if ($review->getRating() >= 3) echo 'active'; ?>"></span>
+                    <span class="<?php if ($review->getRating() >= 4) echo 'active'; ?>"></span>
+                    <span class="<?php if ($review->getRating() >= 5) echo 'active'; ?>"></span>
+                </div>
+            <br>
 
+            <?php endforeach; ?>
+<br>
+            <?php } ?>
             <form action="review-add" method="post">
+                <input type="hidden" placeholder="Enter Product-id" name="product_id" value="<?php echo $product->getId();?>" id="product_id" required>
             <label><b>Оставьте отзыв:</b></label>
             <?php if (isset($errors['review'])): ?>
                 <label style="color: brown"> <?php echo $errors['review'];?> </label>
             <?php endif; ?>
             <p><textarea name="review" id="review" required></textarea></p>
+                <label>Ваша оценка</label>
+                <div class="rating-area">
+                    <input type="radio" id="star-5" name="rating" value="5">
+                    <label for="star-5" title="Оценка «5»"></label>
+                    <input type="radio" id="star-4" name="rating" value="4">
+                    <label for="star-4" title="Оценка «4»"></label>
+                    <input type="radio" id="star-3" name="rating" value="3">
+                    <label for="star-3" title="Оценка «3»"></label>
+                    <input type="radio" id="star-2" name="rating" value="2">
+                    <label for="star-2" title="Оценка «2»"></label>
+                    <input type="radio" id="star-1" name="rating" value="1">
+                    <label for="star-1" title="Оценка «1»"></label>
+                </div>
         <button type="submit" >Оставить отзыв</button>
             </form>
     </section>
@@ -49,6 +87,11 @@
             line-height: 1.2;
             color: #333333;
             text-align: justify-all;
+        }
+        .time {
+            font-style: oblique;
+            font-size: 10px;
+
         }
         .data {
             border: 2px solid lightslategrey; /* Параметры рамки */
@@ -75,7 +118,83 @@
             padding: 0 15px;
         }
 
+        .rating-area {
+            overflow: hidden;
+            width: 265px;
 
+        }
+        .rating-area:not(:checked) > input {
+            display: none;
+        }
+        .rating-area:not(:checked) > label {
+            float: right;
+            width: 42px;
+            padding: 0;
+            cursor: pointer;
+            font-size: 32px;
+            line-height: 32px;
+            color: lightgrey;
+            text-shadow: 1px 1px #bbb;
+        }
+        .rating-area:not(:checked) > label:before {
+            content: '★';
+        }
+        .rating-area > input:checked ~ label {
+            color: gold;
+            text-shadow: 1px 1px #c60;
+        }
+        .rating-area:not(:checked) > label:hover,
+        .rating-area:not(:checked) > label:hover ~ label {
+            color: gold;
+        }
+        .rating-area > input:checked + label:hover,
+        .rating-area > input:checked + label:hover ~ label,
+        .rating-area > input:checked ~ label:hover,
+        .rating-area > input:checked ~ label:hover ~ label,
+        .rating-area > label:hover ~ input:checked ~ label {
+            color: gold;
+            text-shadow: 1px 1px goldenrod;
+        }
+        .rate-area > label:active {
+            position: relative;
+        }
+
+        .rating-result {
+            width: 265px;
+
+        }
+        .rating-result span {
+            padding: 0;
+            font-size: 32px;
+            margin: 0 3px;
+            line-height: 1;
+            color: lightgrey;
+            text-shadow: 1px 1px #bbb;
+        }
+        .rating-result > span:before {
+            content: '★';
+        }
+        .rating-result > span.active {
+            color: gold;
+            text-shadow: 1px 1px #c60;
+        }
+
+        .rating-mini {
+            display: inline-block;
+            font-size: 0;
+        }
+        .rating-mini span {
+            padding: 0;
+            font-size: 20px;
+            line-height: 1;
+            color: lightgrey;
+        }
+        .rating-mini > span:before {
+            content: '★';
+        }
+        .rating-mini > span.active {
+            color: gold;
+        }
         .card {
             margin:auto;
             overflow: hidden;

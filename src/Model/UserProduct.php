@@ -9,6 +9,7 @@ class UserProduct extends Model
     private int $amount;
     private Product $product;
     private int $sum;
+    private int $totalSum;
 
     public function getById(int $product_id, int $user_id): self|null
     {
@@ -85,6 +86,15 @@ class UserProduct extends Model
     public function getSum(): int
     {
         return $this->sum;
+    }
+    public function setTotalSum(int $totalSum)
+    {
+        $this->totalSum = $totalSum;
+    }
+
+    public function getTotalSum(): int
+    {
+        return $this->totalSum;
     }
 
     public function getId(): int

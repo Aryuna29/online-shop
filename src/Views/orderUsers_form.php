@@ -7,36 +7,40 @@
     <h3>Мои заказы</h3>
 
     <div class="container container-cards">
-        <?php foreach ($newUserOrders as $newUserOrder): ?>
+        <?php if ($userOrders === null) {?>
+            <p>Нет заказов</p>
+        <?php } else {?>
+        <?php foreach ($userOrders as $userOrder): ?>
             <div class="card">
-                   <label>Номер заказа: <?php echo $newUserOrder->getId();?></label>
+                   <label>Номер заказа: <?php echo $userOrder->getId();?></label>
                 <br>
-                <label>Имя: <?php echo $newUserOrder->getContactName();?></label>
+                <label>Имя: <?php echo $userOrder->getContactName();?></label>
                 <br>
-                <label>Телефон: <?php echo $newUserOrder->getContactPhone();?></label>
+                <label>Телефон: <?php echo $userOrder->getContactPhone();?></label>
                 <br>
-                <label>Адрес: <?php echo $newUserOrder->getAddress();?></label>
+                <label>Адрес: <?php echo $userOrder->getAddress();?></label>
                 <br>
-                <label>Комментарий: <?php echo $newUserOrder->getComment();?></label>
+                <label>Комментарий: <?php echo $userOrder->getComment();?></label>
                 <br>
                 <hr>
-                <?php foreach ($newUserOrder->getNewOrderProducts() as $newOrderProduct): ?>
+                <?php foreach ($userOrder->getOrderProducts() as $orderProduct): ?>
                     <br>
-                    <div class="order"><li><?php echo $newOrderProduct->getProduct()->getName();?>
+                    <div class="order"><li><?php echo $orderProduct->getProduct()->getName();?>
                             <br>
-                            <img src="<?php echo $newOrderProduct->getProduct()->getImageUrl();?>" height="130" width="100" alt="Card image"/>
+                            <img src="<?php echo $orderProduct->getProduct()->getImageUrl();?>" height="130" width="100" alt="Card image"/>
                             <br>
                             <label>
-                                Количество: <?php echo $newOrderProduct->getAmount();?> шт
+                                Количество: <?php echo $orderProduct->getAmount();?> шт
                                 <br>
-                                Сумма: <?php echo $newOrderProduct->getSum();?>₽
+                                Сумма: <?php echo $orderProduct->getSum();?>₽
                             <br>
                             </label></li></div>
                 <?php endforeach;?>
-                <h4>Сумма заказа: <?php echo $newUserOrder->getTotal();?>₽</h4>
+                <h4>Сумма заказа: <?php echo $userOrder->getTotal();?>₽</h4>
             </div>
 
         <?php endforeach;?>
+        <?php } ?>
     </div>
 </section>
 </form>

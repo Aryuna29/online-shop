@@ -6,28 +6,27 @@
         <a href="/logout" class="button16">Выход</a>
         <h3>Корзина</h3>
         <hr>
-        <?php foreach ($products as $product): ?>
+        <?php foreach ($userProducts as $userProduct): ?>
 
         <div class="card-name">
-            <img src="<?php echo $product->getProduct()->getImageUrl();?>" height="350" width="280" alt="Card image"/>
+            <img src="<?php echo $userProduct->getProduct()->getImageUrl();?>" height="350" width="280" alt="Card image"/>
         </div>
             <div class="card-name">
-                <label for="product_id"><?php echo $product->getProduct()->getName();?></label>
+                <label for="product_id"><?php echo $userProduct->getProduct()->getName();?></label>
             </div>
             <div class="card-name">
-                <label for="product_id"> <?php echo $product->getProduct()->getDescription();?></label>
+                <label for="product_id"> <?php echo $userProduct->getProduct()->getDescription();?></label>
             </div>
             <div class="card-name">
-                <label for="product_id"> <?php echo $product->getProduct()->getPrice();?></label>
+                <label for="product_id"> <?php echo $userProduct->getProduct()->getPrice();?></label>
             </div>
 
         <div class="card-e">
-            <label for="amount">Количество: <?php echo $product->getAmount();?></label>
+            <label for="amount">Количество: <?php echo $userProduct->getAmount();?></label>
         </div>
 
         <?php endforeach;?>
 
-        <button type="submit" name="submit" class="button21" >Очистить корзину</button>
         <a href="http://localhost:81/create-order" class="button21">заказать</a>
     </div>
         <hr>

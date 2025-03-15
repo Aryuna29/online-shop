@@ -10,7 +10,8 @@ class OrderProduct extends Model
     private int $amount;
     private int $sum;
     private Product $product;
-    private OrderProduct $orderProduct;
+    private int $total;
+
     public function create(int $orderId, int $productId, int $amount)
     {
         $stmt = $this->PDO->prepare(
@@ -40,6 +41,16 @@ class OrderProduct extends Model
         return $result;
     }
 
+
+    public function setTotal(int $total)
+    {
+        $this->total = $total;
+    }
+
+    public function getTotal(): int
+    {
+        return $this->total;
+    }
 
     public function setProduct(Product $product)
     {

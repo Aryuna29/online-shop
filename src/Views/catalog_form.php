@@ -25,6 +25,7 @@
                                         <input  name="amount" type="hidden" id="amount" value="1" required>
                                         <button name="submit" class="bt_minus"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
                                     </form>
+
                                     <input type="text" value="<?php echo $product->getAmount();?>" size="1" class="quantity" readonly/>
                                     <form action="/add" method="POST">
                                         <input type="hidden" name="product_id" value="<?php echo $product->getId();?>" id="product_id" required>

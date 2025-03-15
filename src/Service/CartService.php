@@ -2,41 +2,70 @@
 
 namespace Service;
 
+use DTO\CartAddProductDTO;
+use DTO\CartDecreaseProductDTO;
+use Model\Product;
 use Model\UserProduct;
 
 class CartService
 {
     private UserProduct $userProductModel;
+    private AuthService $authService;
+    private Product $productModel;
     public function __construct()
     {
         $this->userProductModel = new UserProduct();
+        $this->authService = new AuthService();
+        $this->productModel = new Product();
     }
-    public function addProduct(int $productId, int $userId, int $amount)
+    public function addProduct(CartAddProductDTO $dataAdd)
     {
-            $ident = $this->userProductModel->getById($productId, $userId);
-            if ($ident !== null) {
-                $amount = $amount + $ident->getAmount();
+            $user = $this->authService->getCurrentUser();
+            $userProduct = $this->userProductModel->getById($dataAdd->getProductId(), $user->getId());
+            if ($userProduct !== null) {
+                $amount = $dataAdd->getAmount() + $userProduct->getAmount();
 
-                $this->userProductModel->updateById($productId, $userId, $amount);
+                $this->userProductModel->updateById($dataAdd->getProductId(), $user->getId(), $amount);
             } else {
-                $this->userProductModel->insertId($userId , $productId, $amount);
+                $this->userProductModel->insertId($user->getId(), $dataAdd->getProductId(), $dataAdd->getAmount());
             }
     }
 
-    public function decreaseProduct(int $productId, int $userId, int $amount)
+    public function decreaseProduct(CartDecreaseProductDTO $dataDecrease)
     {
-        $ident = $this->userProductModel->getById($productId, $userId);
-        if (!$ident) {
+        $user = $this->authService->getCurrentUser();
+        $userProduct = $this->userProductModel->getById($dataDecrease->getProductId(), $user->getId());
+        if (!$userProduct) {
            return false;
         }
-        $amountNew = $ident->getAmount();
+        $amountNew = $userProduct->getAmount();
         if ($amountNew > 1) {
-            $amount =$amountNew - $amount;
-            $this->userProductModel->updateById($productId, $userId, $amount);
+            $amount =$amountNew - $dataDecrease->getAmount();
+            $this->userProductModel->updateById($dataDecrease->getProductId(), $user->getId(), $amount);
         }
         else {
-            $this->userProductModel->deleteById($productId, $userId);
+            $this->userProductModel->deleteById($dataDecrease->getProductId(), $user->getId());
         }
+    }
+
+    public function getUserProducts(): array
+    {
+        $user = $this->authService->getCurrentUser();
+        if ($user === null) {
+            return [];
+        }
+        $userProducts = $this->userProductModel->getALLByUserId($user->getId());
+        $totalSum = 0;
+        foreach ($userProducts as $userProduct) {
+            $productId = $userProduct->getProductId();
+            $product = $this->productModel->getById($productId);
+            $userProduct->setProduct($product);
+            $sum = $userProduct->getAmount() * $product->getPrice();
+            $userProduct->setSum($sum);
+            $totalSum += $sum;
+            $userProduct->setTotalSum($totalSum);
+        }
+        return $userProducts;
     }
 
 }
