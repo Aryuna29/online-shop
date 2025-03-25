@@ -2,7 +2,6 @@
 
 namespace Model;
 
-use DateTime;
 
 class Review extends Model
 {
@@ -14,16 +13,23 @@ private User $user;
 private string $time;
 private int $rating;
 
-    public function create(int $product_id, int $user_id, string $review, string $time, int $rating)
+    protected static function getTableName(): string
     {
-        $stmt = $this->PDO->prepare
-            ("INSERT INTO reviews (product_id, user_id, review, time, rating) VALUES (:product_id, :user_id, :review, :time, :rating)");
+        return 'reviews';
+    }
+    public static function create(int $product_id, int $user_id, string $review, string $time, int $rating)
+    {
+        $tableName = static::getTableName();
+        $stmt = static::getPDO()->prepare
+            ("INSERT INTO {$tableName} (product_id, user_id, review, time, rating)
+                    VALUES (:product_id, :user_id, :review, :time, :rating)");
         $stmt->execute(['product_id' => $product_id, 'user_id' => $user_id, 'review' => $review, 'time' => $time, 'rating' => $rating]);
     }
 
-    public function getAllReviews(int $product_id): array| null
+    public static function getAllReviews(int $product_id): array| null
     {
-        $stmt = $this->PDO->prepare("SELECT * FROM reviews WHERE product_id = :product_id");
+        $tableName = static::getTableName();
+        $stmt = static::getPDO()->prepare("SELECT * FROM {$tableName} WHERE product_id = :product_id");
         $stmt->execute(['product_id' => $product_id]);
         $data = $stmt->fetchAll();
         if ($data == false) {
@@ -31,16 +37,24 @@ private int $rating;
         }
         $result = [];
         foreach ($data as $value) {
-            $obj = new self();
-            $obj->id = $value['id'];
-            $obj->user_id = $value['user_id'];
-            $obj->product_id = $value['product_id'];
-            $obj->review = $value['review'];
-            $obj->time = $value['time'];
-            $obj->rating = $value['rating'];
-            $result[] = $obj;
+            $result[] = static::createObj($value);
         }
         return $result;
+    }
+
+    public static function createObj(array $review): self|null
+    {
+        if (!$review) {
+            return null;
+        }
+        $obj = new self();
+        $obj->id = $review['id'];
+        $obj->user_id = $review['user_id'];
+        $obj->product_id = $review['product_id'];
+        $obj->review = $review['review'];
+        $obj->time = $review['time'];
+        $obj->rating = $review['rating'];
+        return $obj;
     }
 
     public function getRating(): int

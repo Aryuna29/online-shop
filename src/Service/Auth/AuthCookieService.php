@@ -1,10 +1,10 @@
 <?php
 
-namespace Service;
+namespace Service\Auth;
 
 use Model\User;
 
-class AuthService
+class AuthCookieService implements AuthInterface
 {
     protected User $userModel;
     public function __construct()
@@ -13,16 +13,14 @@ class AuthService
     }
     public function check(): bool
     {
-        $this->startSession();
-        return isset($_SESSION['userId']);
+        return isset($_COOKIE['userId']);
     }
 
     public function getCurrentUser(): User|null
     {
-        $this->startSession();
         if ($this->check()) {
-            $userId = $_SESSION['userId'];
-            return $this->userModel->getById($userId);
+            $userId = $_COOKIE['userId'];
+            return User::getById($userId);
         } else {
             return null;
         }
@@ -33,15 +31,14 @@ class AuthService
     public function auth(string $email, string $password)
     {
 
-        $user = $this->userModel->getByEmail($email);
+        $user = User::getByEmail($email);
 
         if (!$user) {
             return false;
         } else {
             $passwordDB = $user->getPassword();
             if (password_verify($password, $passwordDB)) {
-                $this->startSession();
-                $_SESSION['userId'] = $user->getId();
+                setcookie('userId', $user->getId());
                 return true;
             } else {
                 return false;
@@ -50,15 +47,9 @@ class AuthService
     }
     public function logout()
     {
-        $this->startSession();
-        session_destroy();
+     setcookie('userId', '', time() - 3600, '/');
+     unset($_COOKIE['userId']);
     }
 
-    protected function startSession()
-    {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-    }
 
 }

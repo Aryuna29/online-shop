@@ -17,19 +17,12 @@ use Service\CartService;
 class ProductController extends BaseController
 {
 
-    private UserProduct $userProductModel;
-    private Product $productModel;
-    private Review $reviewModel;
     private CartService $cartService;
-    private User $userModel;
+
     public function __construct()
     {
-        $this->userProductModel = new UserProduct();
-        $this->productModel = new Product();
-        $this->reviewModel = new Review();
         parent::__construct();
         $this->cartService = new CartService();
-        $this->userModel = new User();
     }
     public function catalog()
     {
@@ -38,11 +31,10 @@ class ProductController extends BaseController
             exit();
         }
         $user = $this->authService->getCurrentUser();
-
-        $products = $this->productModel->getProducts();
-
+        $cart = UserProduct::getCount($user->getId());
+        $products = Product::getProducts();
         foreach ($products as $product) {
-            $userProduct = $this->userProductModel->getById($product->getId(), $user->getId());
+            $userProduct = UserProduct::getById($product->getId(), $user->getId());
             if ($userProduct === null) {
                 $product->setAmount(0);
             } else {
@@ -62,7 +54,6 @@ class ProductController extends BaseController
         }
                 $dtoAdd = new CartAddProductDTO($request->getProductId(), $request->getAmount());
                 $this->cartService->addProduct($dtoAdd);
-                header('Location: /catalog');
 
         require_once '../Views/catalog_form.php';
     }
@@ -102,15 +93,15 @@ class ProductController extends BaseController
         $user = $this->authService->getCurrentUser();
         $userId = $user->getId();
         $productId = $request->getProductId();
-        $product = $this->productModel->getById($productId);
-        $reviews = $this->reviewModel->getAllReviews($productId);
+        $product = Product::getById($productId);
+        $reviews = Review::getAllReviews($productId);
         if ($reviews === null) {
             $ratingTotal = 0;
         } else {
             $count = count($reviews);
             $rating = 0;
             foreach ($reviews as $review) {
-                $review->setUser($this->userModel->getById($review->getUserId()));
+                $review->setUser(User::getById($review->getUserId()));
                 $rating += $review->getRating();
             }
             $ratingTotal = $rating / $count;
@@ -133,8 +124,11 @@ class ProductController extends BaseController
                 $review = $request->getReview();
                 $time = date("Y-m-d H:i:s");
                 $rating = $request->getRating();
-                $this->reviewModel->create($productId, $userId, $review, $time, $rating);
+                Review::create($productId, $userId, $review, $time, $rating);
                 header('Location: /catalog');
+            } else {
+                print_r($errors);
+                die();
             }
         require_once '../Views/review_form.php';
     }

@@ -2,7 +2,6 @@
 
 namespace DTO;
 
-use Model\User;
 
 class CartDecreaseProductDTO
 {

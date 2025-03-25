@@ -2,11 +2,18 @@
 
 namespace Core;
 
-use Request\ProfileEditedRequest;
+use Service\Logger\LoggerBDService;
+use Service\Logger\LoggerInterface;
+use Service\Logger\LoggerService;
 
 class App
 {
+    private LoggerInterface $loggerService;
     private array $routes = [];
+    public function __construct()
+    {
+        $this->loggerService = new LoggerService();
+    }
 public function run()
 {
 
@@ -24,13 +31,16 @@ public function run()
             $controller = new $class;
 
             $requestClass = $handler['request'];
-            if ($requestClass !== null) {
-                $request = new $requestClass($_POST);
-                $controller->$method($request);
-            } else {
-                $controller->$method();
+            try {
+                if ($requestClass !== null) {
+                    $request = new $requestClass($_POST);
+                    $controller->$method($request);
+                } else {
+                    $controller->$method();
+                }
+            } catch (\Throwable $exception) {
+               $this->loggerService->log($exception);
             }
-
         } else {
             echo "$requestMethod не поддерживается для $requestUri";
         }

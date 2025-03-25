@@ -27,9 +27,20 @@ class AddReviewsRequest
 
         if (isset($this->data['review'])) {
             $review = $this->data['review'];
-            if (strlen($review) > 255) {
-                $errors['review'] = 'больше 255 символов!';
+            if (strlen($review) < 2 || strlen($review) > 255) {
+                $errors['review'] = 'длина строки должна быть больше 2 и меньше 255 символов!';
             }
+        }
+        if (isset($this->data['rating'])) {
+            $rating = $this->data['rating'];
+
+            if (!is_numeric($rating)) {
+                $errors['rating'] = 'оценка не может быть строкой';
+            } elseif ($rating > 5 || $rating < 1) {
+                $errors['rating'] = 'укажите верную оценку';
+            }
+        } else {
+            $errors['rating'] = 'укажите оценку';
         }
         return $errors;
     }

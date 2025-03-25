@@ -12,9 +12,13 @@ class Order extends Model
     private string $address;
     private int $total;
     private array $orderProducts;
+    private int $sum;
 
-
-    public function create(
+    protected static function getTableName(): string
+    {
+        return 'orders';
+    }
+    public static function create(
         string $contactName,
         string $contactPhone,
         string $address,
@@ -22,23 +26,25 @@ class Order extends Model
         int $userId
     )
     {
-        $stmt = $this->PDO->prepare(
-            "INSERT INTO orders (contact_name, contact_phone, address, comment, user_id)
+        $tableName = static::getTableName();
+        $stmt = static::getPDO()->prepare(
+            "INSERT INTO {$tableName} (contact_name, contact_phone, address, comment, user_id)
                     VALUES (:name, :phone,  :address, :comment, :user_id) RETURNING id"
         );
-        $stmt->execute(
-            ['name' => $contactName,
-                'phone' => $contactPhone,
-                'address' => $address,
-                'comment' => $comment,
-                'user_id' =>$userId
+        $stmt->execute([
+            'name' => $contactName,
+            'phone' => $contactPhone,
+            'address' => $address,
+            'comment' => $comment,
+            'user_id' =>$userId
             ]);
         $data = $stmt->fetch();
         return $data['id'];
     }
-    public function getALLByUserId(int $user_id): array|null
+    public static function getALLByUserId(int $user_id): array|null
     {
-        $stmt = $this->PDO->prepare("SELECT * FROM orders WHERE user_id = :userId");
+        $tableName = static::getTableName();
+        $stmt = static::getPDO()->prepare("SELECT * FROM {$tableName} WHERE user_id = :userId");
         $stmt->execute(['userId' => $user_id]);
         $data = $stmt->fetchAll();
         if ($data == false) {
@@ -46,16 +52,25 @@ class Order extends Model
         }
         $orders = [];
         foreach ($data as $order) {
-            $obj = new self();
-            $obj->id = $order['id'];
-            $obj->contact_name = $order['contact_name'];
-            $obj->contact_phone = $order['contact_phone'];
-            $obj->comment = $order['comment'];
-            $obj->user_id = $order['user_id'];
-            $obj->address = $order['address'];
-            $orders[] = $obj;
+            $orders[] = static::createObj($order);
         }
         return $orders;
+    }
+
+
+    public static function createObj(array $order): self|null
+    {
+        if (!$order) {
+            return null;
+        }
+        $obj = new self();
+        $obj->id = $order['id'];
+        $obj->contact_name = $order['contact_name'];
+        $obj->contact_phone = $order['contact_phone'];
+        $obj->comment = $order['comment'];
+        $obj->user_id = $order['user_id'];
+        $obj->address = $order['address'];
+        return $obj;
     }
 
 public function setOrderProducts(array $orderProducts)
@@ -63,6 +78,14 @@ public function setOrderProducts(array $orderProducts)
     $this->orderProducts = $orderProducts;
 }
 
+    public function setSum(int $sum)
+    {
+        $this->sum = $sum;
+    }
+    public function getSum(): int
+    {
+        return $this->sum;
+    }
     public function getOrderProducts()
     {
         return $this->orderProducts;
@@ -79,31 +102,25 @@ public function setOrderProducts(array $orderProducts)
     {
         return $this->id;
     }
-
     public function getContactName(): string
     {
         return $this->contact_name;
     }
-
     public function getContactPhone(): string
     {
         return $this->contact_phone;
     }
-
     public function getComment(): string
     {
         return $this->comment;
     }
-
     public function getUserId(): int
     {
         return $this->user_id;
     }
-
     public function getAddress(): string
     {
         return $this->address;
     }
-
 
 }

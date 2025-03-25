@@ -61,6 +61,9 @@
             <?php endif; ?>
             <p><textarea name="review" id="review" required></textarea></p>
                 <label>Ваша оценка</label>
+                <?php if (isset($errors['rating'])): ?>
+                    <label style="color: brown"> <?php echo $errors['rating'];?> </label>
+                <?php endif; ?>
                 <div class="rating-area">
                     <input type="radio" id="star-5" name="rating" value="5">
                     <label for="star-5" title="Оценка «5»"></label>

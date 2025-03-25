@@ -41,6 +41,7 @@ class OrderController extends BaseController
             header('location: /login');
         }
         $errors = $request->Validate();
+
         if (empty($errors)) {
             $dto = new OrderCreateDTO(
                 $request->getContactName(),
@@ -66,6 +67,7 @@ class OrderController extends BaseController
             header('location: /login');
         }
         $userOrders = $this->orderService->getAll();
+
         require_once '../Views/orderUsers_form.php';
     }
 

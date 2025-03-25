@@ -34,8 +34,8 @@ class UserController extends BaseController
 
             $password = password_hash($request->getPassword(), PASSWORD_DEFAULT);
 
-            $insertData = $this->userModel->insertByNameEmailPass($request->getName(), $request->getEmail(), $password);
-            $result = $this->userModel->getByEmail($request->getEmail());
+            $insertData = User::insertByNameEmailPass($request->getName(), $request->getEmail(), $password);
+            $result = User::getByEmail($request->getEmail());
             header("Location: http://localhost:81/catalog");
         }
 
@@ -84,7 +84,7 @@ class UserController extends BaseController
         if ($this->authService->check()) {
             $userId = $this->authService->getCurrentUser();
 
-            $user = $this->userModel->getById($userId->getId());
+            $user = User::getById($userId->getId());
             require_once '../Views/FORMeditedProfile.php';
         }
     }
@@ -95,16 +95,16 @@ class UserController extends BaseController
         if ($this->authService->check()) {
             $userId = $this->authService->getCurrentUser();
 
-            $user = $this->userModel->getById($userId->getId());
+            $user = User::getById($userId->getId());
 
                 $errors = $request->validate();
                 if (empty($errors)) {
 
                     if ($user->getName() !== $request->getName()) {
-                        $this->userModel->updateNameById($userId->getId(), $request->getName());
+                        User::updateNameById($userId->getId(), $request->getName());
                     }
                     if ($user->getEmail() !== $request->getEmail()) {
-                        $this->userModel->updateEmailById($userId->getId(), $request->getEmail());
+                        User::updateEmailById($userId->getId(), $request->getEmail());
                     }
                     header('Location: http://localhost:81/profile');
                     exit;

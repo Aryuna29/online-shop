@@ -11,42 +11,49 @@ class Product extends Model
     private string $image_url;
     private array $reviewsNew;
     private int $amount;
-    public function getProducts(): array|null
+
+    protected static function getTableName(): string
     {
-        $stmt = $this->PDO->query('SELECT * FROM products');
-        $result = $stmt->fetchAll();
+        return 'products';
+    }
+    public static function getProducts(): array|null
+    {
+        $tableName = static::getTableName();
+        $stmt = static::getPDO()->query("SELECT * FROM {$tableName}");
+        $products = $stmt->fetchAll();
         $data = [];
-        foreach ($result as $product) {
-            $obj = new self();
-            $obj->id = $product['id'];
-            $obj->name = $product['name'];
-            $obj->description = $product['description'];
-            $obj->price = $product['price'];
-            $obj->image_url = $product['image_url'];
-            $data[] = $obj;
+        foreach ($products as $product) {
+            $data[] = static::createObj($product);
         }
         return $data;
     }
 
-
-    public function getById(int $productId): self|null
+    public static function getById(int $productId): self|null
     {
-        $stmt = $this->PDO->prepare("SELECT * FROM products WHERE id = :productId");
+        $tableName = static::getTableName();
+        $stmt = static::getPDO()->prepare("SELECT * FROM {$tableName} WHERE id = :productId");
         $stmt->execute(['productId' => $productId]);
         $result = $stmt->fetch();
         if ($result === false) {
             return null;
         }
-        $obj = new self();
-        $obj->id = $result['id'];
-        $obj->name = $result['name'];
-        $obj->description = $result['description'];
-        $obj->price = $result['price'];
-        $obj->image_url = $result['image_url'];
-        return $obj;
-
+        return static::createObj($result);
     }
 
+    public static function createObj(array $products): self|null
+    {
+        if (!$products) {
+            return null;
+        }
+        $obj = new self();
+        $obj->id = $products['id'];
+        $obj->name = $products['name'];
+        $obj->description = $products['description'];
+        $obj->price = $products['price'];
+        $obj->image_url = $products['image_url'];
+
+        return $obj;
+    }
 
     public function setAmount(int $amount)
     {
@@ -87,6 +94,31 @@ class Product extends Model
     public function getImageUrl(): string
     {
         return $this->image_url;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function setPrice(string $price): void
+    {
+        $this->price = $price;
+    }
+
+    public function setImageUrl(string $image_url): void
+    {
+        $this->image_url = $image_url;
     }
 
 

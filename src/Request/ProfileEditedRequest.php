@@ -37,7 +37,7 @@ class ProfileEditedRequest
         } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             $errors['email'] = 'email некорректный';
         } else {
-            $user = $this->userModel->getByEmail($email);
+            $user = User::getByEmail($email);
             $userId = $_SESSION['userId'];
             if (!empty($user)) {
                 if ($user->getId() !== $userId) {

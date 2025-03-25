@@ -47,10 +47,13 @@ class RegistrateRequest
             $email = $this->data['email'];
             if (strlen($email) < 3) {
                 $errors['email'] = 'email должен быть больше 3 символов';
-            } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            } elseif (!ctype_lower($email)) {
+                $errors['email'] = 'email должен состоять только из букв в нижнем регистре';
+            }
+            elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
                 $errors['email'] = 'email некорректный';
             } else {
-                $result = $this->userModel->getByEmail($email);
+                $result = User::getByEmail($email);
                 if ($result !== null) {
                     $errors['email'] = 'email уже существует';
                 }

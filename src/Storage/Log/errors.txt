@@ -1,0 +1,82 @@
+
+Message: Для оформления заказа сумма корзины должна быть больше 1000 
+File: /var/www/html/src/Service/OrderService.php 
+Line: 36 
+Data: 2025-03-20 11:18:26 
+Message: Для оформления заказа сумма корзины должна быть больше 1000 
+File: /var/www/html/src/Service/OrderService.php 
+Line: 36 
+Data: 2025-03-20 11:19:34
+Message: Для оформления заказа сумма корзины должна быть больше 1000
+        File: /var/www/html/src/Service/OrderService.php
+        Line: 36
+        Data: 2025-03-20 11:22:29
+        Message: Для оформления заказа сумма корзины должна быть больше 1000
+         File: /var/www/html/src/Service/OrderService.php
+         Line: 36
+         Data: 2025-03-20 11:23:19
+         Message: Call to a member function getId() on null
+         File: /var/www/html/src/Service/OrderService.php
+         Line: 59
+         Data: 2025-03-21 07:40:45
+         Message: Cannot assign null to property Model\UserProduct::$id of type int
+         File: /var/www/html/src/Model/UserProduct.php
+         Line: 82
+         Data: 2025-03-21 09:51:18
+         Message: Call to undefined method Model\UserProduct::getPrice()
+         File: /var/www/html/src/Service/CartService.php
+         Line: 60
+         Data: 2025-03-21 09:52:07
+         Message: Call to undefined method Model\UserProduct::getPrice()
+         File: /var/www/html/src/Service/CartService.php
+         Line: 60
+         Data: 2025-03-21 09:53:43
+         Message: Call to undefined method Model\UserProduct::getPrice()
+         File: /var/www/html/src/Service/CartService.php
+         Line: 60
+         Data: 2025-03-21 09:58:56
+         Message: Typed property Model\UserProduct::$price must not be accessed before initialization
+         File: /var/www/html/src/Model/UserProduct.php
+         Line: 136
+         Data: 2025-03-21 10:56:42
+         Message: Для оформления заказа сумма корзины должна быть больше 1000
+         File: /var/www/html/src/Service/OrderService.php
+         Line: 36
+         Data: 2025-03-21 11:01:31
+         Message: Call to a member function getImageUrl() on null
+         File: /var/www/html/src/Views/review_form.php
+         Line: 12
+         Data: 2025-03-21 11:02:38
+         Message: Call to a member function getImageUrl() on null
+         File: /var/www/html/src/Views/review_form.php
+         Line: 12
+         Data: 2025-03-21 11:02:58
+         Message: Call to a member function getImageUrl() on null
+         File: /var/www/html/src/Views/review_form.php
+         Line: 12
+         Data: 2025-03-21 11:05:27
+         Message: Call to undefined method Model\Order::setSum()
+         File: /var/www/html/src/Service/OrderService.php
+         Line: 56
+         Data: 2025-03-22 14:25:00
+         Message: Call to undefined method Model\Order::setSum()
+         File: /var/www/html/src/Service/OrderService.php
+         Line: 56
+         Data: 2025-03-22 14:25:19
+         Message: Typed property Model\Order::$orderProducts must not be accessed before initialization
+         File: /var/www/html/src/Model/Order.php
+         Line: 152
+         Data: 2025-03-22 14:33:25
+         Message: Call to a member function getId() on null
+         File: /var/www/html/src/Service/OrderService.php
+         Line: 51
+         Data: 2025-03-23 09:00:11
+         Message: syntax error, unexpected token ":"
+         File: /var/www/html/src/Model/Order.php
+         Line: 85
+         Data: 2025-03-23 13:10:36
+         Message: syntax error, unexpected token ":"
+         File: /var/www/html/src/Model/Order.php
+         Line: 85
+         Data: 2025-03-23 13:10:47
+         
